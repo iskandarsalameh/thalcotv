@@ -44,10 +44,13 @@ Only changes under `vega/` (the shell itself) need a new `.vpkg`.
   that only light up under focus, plus a Dictate key that hands over to voice
   input (the system keyboard listens while the remote's microphone button is
   held).
-- **Liquid glass look.** Capsule controls and softly rounded cards; controls
-  and panels are translucent glass with a bright rim, and the sidebar, menus
-  and player controls blur what is behind them. Settings > Reduce Transparency
-  switches the blur off if the stick's GPU finds it heavy.
+- **Liquid glass, used sparingly.** Only the control layer that floats above
+  content is glass: the navigation pill and sidebar, Back, action buttons,
+  filters, player controls, menus and alerts. They blur and brighten what is
+  behind them and carry a specular rim and soft shadow. Content (rows, cards,
+  lists, fields, keys) stays plain, and nothing inside a glass panel is glass.
+  Settings > Reduce Transparency switches the blur off if the stick's GPU
+  finds it heavy.
 - **Motion.** Screens dissolve forward and settle back, the tab selection
   glides, content fades in as it arrives. Everything animates on the GPU
   (transform and opacity only), lasts under a third of a second, and never
