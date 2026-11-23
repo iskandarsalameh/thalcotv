@@ -9,6 +9,23 @@ needs three things:
 - a free **Amazon Developer account** (https://developer.amazon.com),
 - the stick and the computer on the **same network**.
 
+## Quick way: one script (Ubuntu, including Ubuntu on Windows)
+
+`scripts/install-on-stick.sh` does steps 2 to 5 below and asks for the code
+and IP address as it goes. On Windows, open the **Ubuntu** app (WSL), save
+`thalcotv_armv7.vpkg` and `install-on-stick.sh` in your Windows Downloads
+folder, then run:
+
+```bash
+bash /mnt/c/Users/*/Downloads/install-on-stick.sh
+```
+
+If Ubuntu is not set up on Windows yet, open PowerShell as administrator, run
+`wsl --install -d Ubuntu`, and restart. If the stick cannot be reached from
+Ubuntu, turn off any VPN on Windows and try again.
+
+The rest of this page is the same process by hand.
+
 ## 1. Get the package
 
 Open the repository on GitHub, go to **Releases**, and download

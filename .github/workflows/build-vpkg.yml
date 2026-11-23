@@ -99,5 +99,7 @@ jobs:
             Install `thalcotv_armv7.vpkg` on a Fire TV Stick 4K Select. See docs/INSTALL.md.
             The interface updates itself from the repository; this package only needs
             reinstalling when the shell in `vega/` changes.
-          files: out/*.vpkg
+          files: |
+            out/*.vpkg
+            scripts/install-on-stick.sh
           make_latest: true
