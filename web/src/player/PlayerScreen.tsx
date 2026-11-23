@@ -949,7 +949,13 @@ export function PlayerScreen({ active, meta, video, streams, index, startAt }: P
         </div>
       )}
 
-      <div class="player-top">
+      <div class="player-top" data-inert={visible ? undefined : ''}>
+        <Focusable class="side-pill side-pill-back player-back" label={t('common.back')} onSelect={exit}>
+          <span class="side-pill-icon">
+            <Icon name="chevronLeft" class="side-pill-arrow" />
+          </span>
+          <span class="side-pill-label">{t('common.back')}</span>
+        </Focusable>
         <div class="player-title">{meta.name}</div>
         {episodeLine && <div class="player-subtitle">{episodeLine}</div>}
         {current && <div class="player-source">{[current.label, current.addonName].filter(Boolean).join(' · ')}</div>}

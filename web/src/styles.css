@@ -179,6 +179,33 @@ dd {
   white-space: nowrap;
 }
 
+.side-pill:focus {
+  background: #fff;
+  color: #000;
+  transform: scale(1.05);
+  box-shadow: var(--focus-shadow);
+}
+
+.side-pill:focus .side-pill-icon {
+  background: rgba(0, 0, 0, 0.12);
+}
+
+/* Back pill: same place, same shape; the circle carries the arrow. */
+.side-pill-back {
+  padding-inline-start: 0.55rem;
+}
+
+[dir='rtl'] .side-pill-arrow {
+  transform: scaleX(-1);
+}
+
+.player-back {
+  position: absolute;
+  top: 2.25rem;
+  inset-inline-start: 3.4rem;
+  pointer-events: auto;
+}
+
 .side-pill-chevron {
   font-size: 1.15rem;
   color: var(--text-2);
@@ -1243,7 +1270,7 @@ img + .hero-title-backup {
 
 .player-top {
   top: 0;
-  padding: var(--safe-y) var(--safe-x) 6rem;
+  padding: 8rem var(--safe-x) 6rem;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
 }
 
@@ -2125,14 +2152,6 @@ img + .hero-title-backup {
   font-size: 1.45rem;
 }
 
-/* Screens opened on top of a tab have no tab bar above them. */
-.layer-stack .page-header {
-  top: 4.25rem;
-}
-
-.layer-stack .page-body {
-  top: 9.75rem;
-}
 
 /* ---- phone pairing --------------------------------------------------------- */
 

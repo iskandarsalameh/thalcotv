@@ -171,7 +171,8 @@ export function entryOf(container: Element): HTMLElement | null {
     }
   }
   if (container instanceof HTMLElement && container.matches(FOCUSABLE) && isVisible(container)) return container;
-  return candidatesIn(container)[0] ?? null;
+  // Navigation chrome (the section/Back pill) is reached deliberately, never by default.
+  return candidatesIn(container).find((el) => !el.closest('[data-no-autofocus]') || container.closest('[data-no-autofocus]')) ?? null;
 }
 
 export function focusFirst(container: Element | null | undefined): boolean {

@@ -32,7 +32,8 @@ Only changes under `vega/` (the shell itself) need a new `.vpkg`.
 - **Sidebar navigation** in the tvOS manner: the current section rests as a
   small pill in the top corner and opens into a sidebar (Search, Home, Movies,
   Series, Library, Settings) when you move onto it, press Left at a page's
-  edge, or press Back.
+  edge, or press Back. On every screen opened on top of a section (title
+  pages, sources, add-ons, the player) the same corner holds a Back pill.
 - **Add-ons** like Stremio, under Settings: browse the community catalog,
   install by URL, reorder by priority, uninstall.
 - **Add from your phone.** The TV shows a QR code; scan it, paste an add-on

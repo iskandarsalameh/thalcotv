@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'preact/hooks';
-import { stack, switchTab, tab, type TabId } from '../../nav/router';
+import { pop, stack, switchTab, tab, type TabId } from '../../nav/router';
 import { isRtl, t } from '../../core/i18n';
 import { chromeHidden, sidebarOpen, updateReady } from '../state';
 import { overlays } from '../overlay';
@@ -21,12 +21,19 @@ const SETTINGS: { id: TabId; icon: string } = { id: 'settings', icon: 'gear' };
  * pill in the top corner naming the current section. Moving onto it (Up from
  * the top of a page, Left from its edge, or Back) opens the sidebar; resting
  * on a section shows it behind, and Right or Select goes into it.
+ *
+ * On any screen opened on top of a section the same spot holds a Back pill, so
+ * the way out is always in one place. (The player draws its own, which fades
+ * with its controls.)
  */
 export function TabBar() {
   const current = tab.value;
-  const stacked = stack.value.length > 0;
+  const depth = stack.value.length;
+  const stacked = depth > 0;
+  const playerOnTop = stacked && stack.value[depth - 1].route.name === 'player';
   const open = sidebarOpen.value && !stacked;
-  const hidden = stacked || (chromeHidden.value && !open);
+  const hidden = playerOnTop || (!stacked && chromeHidden.value && !open);
+  const pillRef = useRef<HTMLDivElement | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const resting = useRef<TabId | null>(null);
@@ -57,8 +64,11 @@ export function TabBar() {
     // Pushing against the leading edge of a page opens the sidebar.
     const onEdge = (e: Event) => {
       const dir = (e as CustomEvent<{ dir: string }>).detail?.dir;
-      if (stack.value.length || sidebarOpen.value || overlays.value.length) return;
-      if (dir === (isRtl() ? 'right' : 'left') && (e.target as HTMLElement).closest('.layer-root')) sidebarOpen.value = true;
+      if (sidebarOpen.value || overlays.value.length || dir !== (isRtl() ? 'right' : 'left')) return;
+      const target = e.target as HTMLElement;
+      // On a section the edge opens the sidebar; deeper in, it lands on the Back pill.
+      if (!stack.value.length && target.closest('.layer-root')) sidebarOpen.value = true;
+      else if (stack.value.length && target.closest('.layer-top') && !target.closest('.screen-player')) focusEl(pillRef.current);
     };
     document.addEventListener('focusedge', onEdge);
     // The sidebar never stays open once focus is somewhere else.
@@ -117,16 +127,42 @@ export function TabBar() {
 
   const currentSection = SECTIONS.find((s) => s.id === current) ?? SETTINGS;
   return (
-    <nav class={'sidebar' + (open ? ' sidebar-open' : '') + (hidden ? ' sidebar-hidden' : '')} id="tabbar" data-inert={stacked ? '' : undefined}>
+    <nav class={'sidebar' + (open ? ' sidebar-open' : '') + (hidden ? ' sidebar-hidden' : '')} id="tabbar" data-no-autofocus="" data-inert={playerOnTop ? '' : undefined}>
       <div class="sidebar-scrim" />
       <div class="side-pill-wrap" data-inert={open ? '' : undefined}>
-        <Focusable class="side-pill" label={t('tab.' + current)} onFocus={() => (sidebarOpen.value = true)} onSelect={() => (sidebarOpen.value = true)}>
-          <Icon name="chevronLeft" class="side-pill-chevron" />
-          <span class="side-pill-icon">
-            <Icon name={currentSection.icon} />
-          </span>
-          <span class="side-pill-label">{t('tab.' + current)}</span>
-        </Focusable>
+        {stacked ? (
+          <Focusable
+            key="back"
+            class="side-pill side-pill-back"
+            label={t('common.back')}
+            elRef={(el) => (pillRef.current = el)}
+            onSelect={() => {
+              pop();
+              // Land where the viewer was on the screen underneath.
+              setTimeout(() => focusFirst(document.querySelector('.layer-top .screen')), 0);
+            }}
+          >
+            <span class="side-pill-icon">
+              <Icon name="chevronLeft" class="side-pill-arrow" />
+            </span>
+            <span class="side-pill-label">{depth === 1 ? t('tab.' + current) : t('common.back')}</span>
+          </Focusable>
+        ) : (
+          <Focusable
+            key="section"
+            class="side-pill"
+            label={t('tab.' + current)}
+            elRef={(el) => (pillRef.current = el)}
+            onFocus={() => (sidebarOpen.value = true)}
+            onSelect={() => (sidebarOpen.value = true)}
+          >
+            <Icon name="chevronLeft" class="side-pill-chevron" />
+            <span class="side-pill-icon">
+              <Icon name={currentSection.icon} />
+            </span>
+            <span class="side-pill-label">{t('tab.' + current)}</span>
+          </Focusable>
+        )}
       </div>
       <div class="sidebar-panel" ref={panelRef} data-focus-group="" data-focus-lock="y" data-inert={open ? undefined : ''}>
         <div class="brand sidebar-brand" aria-hidden="true">
