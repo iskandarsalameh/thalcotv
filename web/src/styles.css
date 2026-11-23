@@ -2476,41 +2476,44 @@ img + .hero-title-backup {
 }
 
 /* ==== Liquid glass ============================================================
- * Used the way the material is meant to be used: only on the control layer
- * that floats above content. That is navigation (the section and Back pill,
- * the sidebar), the buttons that act on a title, toolbar filters, the player's
- * controls, and transient panels (menus, alerts, Up Next, toasts).
- * Content itself (rows, cards, lists, fields, keys) is never glass, and glass
- * is never stacked on glass: what sits inside a glass panel is plain.
+ * Only on the control layer that floats above content: navigation (the section
+ * and Back pill, the sidebar), the buttons that act on a title, toolbar
+ * filters, the player's controls, and transient panels (menus, alerts,
+ * Up Next, toasts). Content (rows, cards, lists, fields, keys) is never glass,
+ * and nothing inside a glass panel is glass.
  *
- * The material is built from five things:
- *   1. a blur of whatever is behind, with colour pushed up so it glows through;
- *   2. an almost clear tint, lighter where light pools at the top and with a
- *      faint return at the bottom, which is what gives glass thickness;
- *   3. inner light: a crisp specular line on the top edge, a softer one on the
- *      bottom, and a diffuse glow for volume;
- *   4. a hairline rim that is bright at the two corners facing the light and
- *      nearly gone at the others, instead of a uniform border;
- *   5. a short contact shadow plus a long soft one, so it floats.
- * Focus lights the glass rather than repainting it flat.
+ * What makes this material read as glass rather than as a glossy plastic
+ * button is restraint:
+ *   - it is almost clear: one flat, very faint tint, no top-to-bottom shine;
+ *   - what is behind shows through, softened and slightly richer in colour;
+ *   - the edge is a hairline of light that is strongest at two opposite
+ *     corners and nearly absent between them, never a uniform outline and
+ *     never a bright line along the top;
+ *   - light gathers softly just inside the edge, with no bevel;
+ *   - the shadow is wide and faint, enough to lift it and no more.
+ * Focus turns the glass into a plain bright surface; it does not add gloss.
  *
- * True refraction (bending the image at the edges) needs a displacement
- * filter that this class of hardware cannot run at speed, so it is left out.
+ * True refraction (the image bending at the edge) needs a displacement
+ * filter this class of hardware cannot run at speed, so it is left out.
  * Settings > Reduce Transparency drops the blur and uses a denser tint.
  */
 
 :root {
-  --glass-tint: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.06) 42%, rgba(255, 255, 255, 0.1) 100%);
-  --glass-tint-strong: linear-gradient(180deg, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0.15) 42%, rgba(255, 255, 255, 0.22) 100%);
-  --glass-inner: inset 0 0.07rem 0.05rem rgba(255, 255, 255, 0.5), inset 0 -0.06rem 0.06rem rgba(255, 255, 255, 0.13), inset 0 0 1rem rgba(255, 255, 255, 0.06);
-  --glass-float: 0 0.12rem 0.3rem rgba(0, 0, 0, 0.28), 0 0.9rem 2.2rem rgba(0, 0, 0, 0.32);
-  --glass-rim: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.14) 28%, rgba(255, 255, 255, 0.05) 62%, rgba(255, 255, 255, 0.42) 100%);
-  --glass-blur: blur(1.5rem) saturate(1.9) brightness(1.06);
-  --glass-blur-panel: blur(2.8rem) saturate(1.9) brightness(1.04);
-  --glass-solid: rgba(64, 64, 70, 0.82);
-  --glass-solid-panel: linear-gradient(180deg, rgba(52, 52, 58, 0.97) 0%, rgba(28, 28, 32, 0.98) 100%);
-  --lit: linear-gradient(180deg, #ffffff 0%, #f1f1f5 55%, #e6e6ec 100%);
-  --lit-shadow: inset 0 0.07rem 0.05rem #fff, inset 0 -0.06rem 0.08rem rgba(0, 0, 0, 0.1), 0 0.15rem 0.4rem rgba(0, 0, 0, 0.3), 0 1.2rem 2.8rem rgba(0, 0, 0, 0.5), 0 0 2.4rem rgba(255, 255, 255, 0.18);
+  --glass-fill: rgba(255, 255, 255, 0.075);
+  --glass-fill-strong: rgba(255, 255, 255, 0.17);
+  --glass-panel: rgba(18, 18, 20, 0.44);
+  /* Soft light just inside the edge, plus the faintest full hairline. */
+  --glass-edge: inset 0 0 0.55rem rgba(255, 255, 255, 0.055), inset 0 0 0 0.05rem rgba(255, 255, 255, 0.07);
+  --glass-lift: 0 0.6rem 1.8rem rgba(0, 0, 0, 0.2);
+  /* The specular rim: light at the corner facing it and, weaker, at the one opposite. */
+  --glass-rim: linear-gradient(140deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.1) 22%, rgba(255, 255, 255, 0) 45%, rgba(255, 255, 255, 0) 60%, rgba(255, 255, 255, 0.08) 82%, rgba(255, 255, 255, 0.3) 100%);
+  --glass-blur: blur(1.15rem) saturate(1.5);
+  --glass-blur-panel: blur(2.4rem) saturate(1.55);
+  /* Used when blur is unavailable or switched off. */
+  --glass-solid: rgba(52, 52, 56, 0.8);
+  --glass-solid-panel: rgba(30, 30, 33, 0.97);
+  --lit: rgba(255, 255, 255, 0.95);
+  --lit-lift: 0 0.9rem 2.2rem rgba(0, 0, 0, 0.38);
 }
 
 /* -- glass controls -- */
@@ -2521,8 +2524,8 @@ img + .hero-title-backup {
 .side-pill,
 .toast {
   position: relative;
-  background: var(--glass-tint), var(--glass-solid);
-  box-shadow: var(--glass-inner), var(--glass-float);
+  background: var(--glass-solid);
+  box-shadow: var(--glass-edge), var(--glass-lift);
 }
 
 .player-back,
@@ -2534,10 +2537,10 @@ img + .hero-title-backup {
 .chip-on,
 .chip-accent,
 .pbtn-on {
-  background: var(--glass-tint-strong), var(--glass-solid);
+  background: rgba(86, 86, 92, 0.86);
 }
 
-/* The rim: one hairline, lit from the upper leading corner. */
+/* The rim, drawn once as a masked hairline. */
 .btn::before,
 .chip::before,
 .pbtn::before,
@@ -2550,7 +2553,7 @@ img + .hero-title-backup {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 0.07rem;
+  padding: 0.06rem;
   background: var(--glass-rim);
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
@@ -2575,28 +2578,34 @@ img + .hero-title-backup {
 }
 
 .side-pill-icon {
-  background: rgba(255, 255, 255, 0.2);
-  box-shadow: inset 0 0.06rem 0.05rem rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.13);
+  box-shadow: none;
 }
 
-/* -- lit glass (focus) -- */
+/* -- focus: a plain bright surface, no gloss -- */
 
 .btn:focus,
 .chip:focus,
 .pbtn:focus,
 .side-pill:focus {
   background: var(--lit);
-  box-shadow: var(--lit-shadow);
+  box-shadow: var(--lit-lift);
+}
+
+.btn:focus::before,
+.chip:focus::before,
+.pbtn:focus::before,
+.side-pill:focus::before {
+  opacity: 0;
 }
 
 .btn-destructive:focus {
-  background: linear-gradient(180deg, #ff7068 0%, var(--red) 100%);
-  box-shadow: inset 0 0.07rem 0.05rem rgba(255, 255, 255, 0.5), 0 1.2rem 2.8rem rgba(0, 0, 0, 0.5), 0 0 2.4rem rgba(255, 69, 58, 0.28);
+  background: var(--red);
+  box-shadow: var(--lit-lift);
 }
 
 .side-pill:focus .side-pill-icon {
-  background: rgba(0, 0, 0, 0.1);
-  box-shadow: none;
+  background: rgba(0, 0, 0, 0.09);
 }
 
 /* -- glass panels -- */
@@ -2604,8 +2613,8 @@ img + .hero-title-backup {
 .sheet,
 .upnext,
 .sidebar-panel {
-  background: var(--glass-tint), var(--glass-solid-panel);
-  box-shadow: var(--glass-inner), 0 0.2rem 0.6rem rgba(0, 0, 0, 0.3), 0 2.6rem 6rem rgba(0, 0, 0, 0.6);
+  background: var(--glass-solid-panel);
+  box-shadow: var(--glass-edge), 0 2rem 5rem rgba(0, 0, 0, 0.45);
 }
 
 .sheet {
@@ -2625,7 +2634,7 @@ img + .hero-title-backup {
 
 [dir='rtl'] .sidebar-panel {
   transform: translate3d(110%, 0, 0);
-  box-shadow: var(--glass-inner), 0 0.2rem 0.6rem rgba(0, 0, 0, 0.3), 0 2.6rem 6rem rgba(0, 0, 0, 0.6);
+  box-shadow: var(--glass-edge), 0 2rem 5rem rgba(0, 0, 0, 0.45);
 }
 
 .sidebar-open .sidebar-panel {
@@ -2633,11 +2642,11 @@ img + .hero-title-backup {
 }
 
 .sidebar-scrim {
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.38) 45%, rgba(0, 0, 0, 0.22) 100%);
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.3) 45%, rgba(0, 0, 0, 0.16) 100%);
 }
 
 .overlay {
-  background: rgba(0, 0, 0, 0.42);
+  background: rgba(0, 0, 0, 0.36);
 }
 
 /* Nothing inside a glass panel is itself glass: rows are plain until focused. */
@@ -2650,17 +2659,17 @@ img + .hero-title-backup {
 
 .side-item-on {
   color: #fff;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.09);
 }
 
 .option:focus,
 .side-item:focus {
   background: var(--lit);
-  box-shadow: 0 0.15rem 0.4rem rgba(0, 0, 0, 0.25), 0 0.9rem 2.2rem rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0.6rem 1.6rem rgba(0, 0, 0, 0.3);
 }
 
 .option-destructive:focus {
-  background: linear-gradient(180deg, #ff7068 0%, var(--red) 100%);
+  background: var(--red);
 }
 
 /* -- the blur itself -- */
@@ -2671,7 +2680,7 @@ img + .hero-title-backup {
   .app:not(.reduce-transparency) .pbtn,
   .app:not(.reduce-transparency) .side-pill,
   .app:not(.reduce-transparency) .toast {
-    background: var(--glass-tint);
+    background: var(--glass-fill);
     -webkit-backdrop-filter: var(--glass-blur);
     backdrop-filter: var(--glass-blur);
   }
@@ -2680,18 +2689,18 @@ img + .hero-title-backup {
   .app:not(.reduce-transparency) .chip-on,
   .app:not(.reduce-transparency) .chip-accent,
   .app:not(.reduce-transparency) .pbtn-on {
-    background: var(--glass-tint-strong);
+    background: var(--glass-fill-strong);
   }
 
   .app:not(.reduce-transparency) .sheet,
   .app:not(.reduce-transparency) .upnext,
   .app:not(.reduce-transparency) .sidebar-panel {
-    background: var(--glass-tint), rgba(26, 26, 30, 0.5);
+    background: var(--glass-panel);
     -webkit-backdrop-filter: var(--glass-blur-panel);
     backdrop-filter: var(--glass-blur-panel);
   }
 
-  /* Lit glass is opaque, so the blur underneath would be wasted work. */
+  /* A lit control is opaque, so blurring under it would be wasted work. */
   .app .btn:focus,
   .app .chip:focus,
   .app .pbtn:focus,
@@ -2702,6 +2711,6 @@ img + .hero-title-backup {
   }
 
   .app .btn-destructive:focus {
-    background: linear-gradient(180deg, #ff7068 0%, var(--red) 100%);
+    background: var(--red);
   }
 }
