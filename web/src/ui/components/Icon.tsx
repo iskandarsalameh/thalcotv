@@ -30,6 +30,10 @@ import gearSvg from '@phosphor-icons/core/assets/bold/gear-bold.svg?raw';
 import micSvg from '@phosphor-icons/core/assets/fill/microphone-fill.svg?raw';
 import keyboardSvg from '@phosphor-icons/core/assets/bold/keyboard-bold.svg?raw';
 import qrSvg from '@phosphor-icons/core/assets/bold/qr-code-bold.svg?raw';
+import homeSvg from '@phosphor-icons/core/assets/bold/house-bold.svg?raw';
+import movieSvg from '@phosphor-icons/core/assets/bold/film-strip-bold.svg?raw';
+import seriesSvg from '@phosphor-icons/core/assets/bold/television-simple-bold.svg?raw';
+import librarySvg from '@phosphor-icons/core/assets/bold/books-bold.svg?raw';
 
 const SOURCES: Record<string, string> = {
   play: playSvg,
@@ -61,6 +65,10 @@ const SOURCES: Record<string, string> = {
   mic: micSvg,
   keyboard: keyboardSvg,
   qr: qrSvg,
+  home: homeSvg,
+  movie: movieSvg,
+  series: seriesSvg,
+  library: librarySvg,
 };
 
 /** Path data only: the wrapper <svg> is ours so the icon inherits size and colour. */

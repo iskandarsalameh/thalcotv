@@ -29,8 +29,10 @@ Only changes under `vega/` (the shell itself) need a new `.vpkg`.
 - **Remote first.** Every control is reachable with the D-pad. Focus is shown
   by lift and a light fill, rows remember where you were, Back always goes up
   one level, holding Select opens options.
-- **Search, Home, Movies, Series, Library, Settings** in a top tab bar that
-  gets out of the way when you scroll.
+- **Sidebar navigation** in the tvOS manner: the current section rests as a
+  small pill in the top corner and opens into a sidebar (Search, Home, Movies,
+  Series, Library, Settings) when you move onto it, press Left at a page's
+  edge, or press Back.
 - **Add-ons** like Stremio, under Settings: browse the community catalog,
   install by URL, reorder by priority, uninstall.
 - **Add from your phone.** The TV shows a QR code; scan it, paste an add-on

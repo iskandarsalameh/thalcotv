@@ -116,36 +116,122 @@ dd {
   opacity: 1;
 }
 
-/* ---- tab bar -------------------------------------------------------------- */
+/* ---- section sidebar ---------------------------------------------------------
+ * At rest: a pill in the top corner naming the current section.
+ * Open: a panel that slides in from the leading edge over a dimmed page.
+ */
 
-.tabbar {
+.sidebar {
   position: absolute;
-  top: 2.25rem;
-  left: 0;
-  right: 0;
-  height: 4.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  inset: 0;
   z-index: 20;
-  transition:
-    transform 0.3s var(--ease),
-    opacity 0.3s linear;
+  pointer-events: none;
 }
 
-.tabbar-hidden {
-  transform: translate3d(0, -8rem, 0);
+.sidebar-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.6) 45%, rgba(0, 0, 0, 0.35) 100%);
   opacity: 0;
+  transition: opacity 0.3s linear;
 }
 
-.tabbar:focus-within {
-  transform: none;
+[dir='rtl'] .sidebar-scrim {
+  transform: scaleX(-1);
+}
+
+.sidebar-open .sidebar-scrim {
   opacity: 1;
 }
 
-.brand {
+.side-pill-wrap {
+  pointer-events: auto;
   position: absolute;
-  inset-inline-start: var(--safe-x);
+  top: 2.25rem;
+  inset-inline-start: 3.4rem;
+  transition:
+    opacity 0.22s linear,
+    transform 0.3s var(--ease);
+}
+
+.sidebar-open .side-pill-wrap {
+  opacity: 0;
+  transform: scale(0.94);
+}
+
+.sidebar-hidden .side-pill-wrap {
+  opacity: 0;
+  transform: translate3d(0, -6rem, 0);
+}
+
+.side-pill {
+  height: 4.25rem;
+  padding-inline: 0.5rem 1.6rem;
+  border-radius: 2.2rem;
+  background: rgba(58, 58, 60, 0.62);
+  box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.7rem;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.side-pill-chevron {
+  font-size: 1.15rem;
+  color: var(--text-2);
+  margin-inline-start: 0.35rem;
+}
+
+[dir='rtl'] .side-pill-chevron {
+  transform: scaleX(-1);
+}
+
+.side-pill-icon {
+  width: 3.1rem;
+  height: 3.1rem;
+  border-radius: 50%;
+  background: var(--fill-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.45rem;
+}
+
+.sidebar-panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  inset-inline-start: 0;
+  width: 27rem;
+  padding: var(--safe-y) 2.5rem var(--safe-y) 3.4rem;
+  display: flex;
+  flex-direction: column;
+  /* Opaque on purpose: without a blur material, page text showing through reads as clutter. */
+  background: #161618;
+  box-shadow: 1.5rem 0 4rem rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transform: translate3d(-100%, 0, 0);
+  transition:
+    transform 0.32s var(--ease),
+    opacity 0.2s linear;
+  will-change: transform;
+  pointer-events: auto;
+}
+
+[dir='rtl'] .sidebar-panel {
+  transform: translate3d(100%, 0, 0);
+  box-shadow: -1.5rem 0 4rem rgba(0, 0, 0, 0.5);
+}
+
+.sidebar-open .sidebar-panel {
+  opacity: 1;
+  transform: none;
+}
+
+.brand {
   font-size: 1.9rem;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -158,73 +244,53 @@ dd {
 }
 
 .brand-lg {
-  position: static;
   font-size: 5rem;
   margin-bottom: 2.5rem;
 }
 
-.tabs {
-  position: relative;
-  display: flex;
-  gap: 0.25rem;
-  padding: 0.5rem;
-  border-radius: 3rem;
-  background: rgba(58, 58, 60, 0.72);
-  box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.35);
+.sidebar-brand {
+  margin: 0.4rem 1.4rem 2.5rem;
+  color: var(--text-2);
 }
 
-/* The selection glides from tab to tab; it turns white while the bar has focus. */
-.tab-pill {
-  position: absolute;
-  top: 0.5rem;
-  left: 0;
-  height: 3.75rem;
-  border-radius: 2rem;
-  background: var(--fill-2);
-  transition:
-    transform 0.3s var(--ease),
-    width 0.3s var(--ease),
-    background-color 0.2s linear,
-    box-shadow 0.2s linear;
-  will-change: transform;
+.sidebar-list {
+  flex: 1;
 }
 
-.tab-pill-focus {
-  background: #fff;
-  box-shadow: 0 0.8rem 1.8rem rgba(0, 0, 0, 0.45);
-}
-
-.tab {
-  position: relative;
-  height: 3.75rem;
-  padding: 0 1.8rem;
-  border-radius: 2rem;
+.side-item {
+  height: 4.6rem;
+  padding: 0 1.4rem;
+  margin-bottom: 0.45rem;
+  border-radius: 1.15rem;
   display: flex;
   align-items: center;
-  font-size: 1.7rem;
+  gap: 1.2rem;
+  font-size: 1.85rem;
   font-weight: 600;
   color: var(--text-2);
   white-space: nowrap;
 }
 
-.tab-icon {
-  padding: 0 1.25rem;
+.side-item .icon {
+  font-size: 1.75rem;
 }
 
-.tab-on {
+.side-item-on {
   color: #fff;
+  background: var(--fill);
 }
 
-.tab:focus {
+.side-item:focus {
+  background: #fff;
   color: #000;
-}
-
-.tabbar-end {
-  position: absolute;
-  inset-inline-end: var(--safe-x);
+  transform: scale(1.04);
+  box-shadow: 0 0.9rem 2rem rgba(0, 0, 0, 0.5);
 }
 
 .update-pill {
+  position: absolute;
+  top: 2.9rem;
+  inset-inline-end: var(--safe-x);
   font-size: 1.3rem;
   font-weight: 600;
   padding: 0.45rem 1.1rem;

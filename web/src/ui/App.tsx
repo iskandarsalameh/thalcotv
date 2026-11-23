@@ -21,7 +21,7 @@ import { DetailsScreen } from './screens/Details';
 import { StreamsScreen } from './screens/Streams';
 import { PlayerScreen } from '../player/PlayerScreen';
 import { alert, confirm, overlays } from './overlay';
-import { chromeHidden, updateReady } from './state';
+import { chromeHidden, sidebarOpen, updateReady } from './state';
 
 function TabRoot({ active }: { active: boolean }) {
   switch (tab.value) {
@@ -144,7 +144,7 @@ export function App() {
     const f = getFocused();
     if (f && !f.closest('[data-inert]') && (topLayer.contains(f) || f.closest('#tabbar'))) return;
     const screen = topLayer.querySelector('.screen');
-    if (!focusFirst(screen ?? topLayer) && layers.length === 0) focusFirst(document.getElementById('tabbar'));
+    focusFirst(screen ?? topLayer);
   }, [tick, boot]);
 
   useEffect(() => {
@@ -154,15 +154,14 @@ export function App() {
         pop();
         return true;
       }
-      const bar = document.getElementById('tabbar');
-      const f = getFocused();
-      if (bar && (!f || !bar.contains(f))) {
-        const currentEl = bar.querySelector<HTMLElement>('.tab-on');
-        if (focusEl(currentEl)) return true;
+      // First Back opens the sidebar, the next returns to Home, the last offers to leave.
+      if (!sidebarOpen.value) {
+        sidebarOpen.value = true;
+        return true;
       }
       if (tab.value !== 'home') {
         switchTab('home');
-        focusEl(document.querySelector<HTMLElement>('#tabbar [data-tab="home"]'));
+        focusEl(document.querySelector<HTMLElement>('#tabbar .sidebar-panel [data-tab="home"]'));
         return true;
       }
       if (overlays.value.length === 0) {
