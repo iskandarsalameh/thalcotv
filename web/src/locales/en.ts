@@ -275,6 +275,8 @@ const en: Record<string, string> = {
   'settings.server.remove.message': 'Torrent sources will stop being playable.',
   'settings.hideAdult': 'Hide Adult Add-ons',
   'settings.reduceMotion': 'Reduce Motion',
+  'settings.reduceTransparency': 'Reduce Transparency',
+  'settings.reduceTransparency.hint': 'Turns off the glass blur. Try this if the interface feels slow.',
   'settings.clearCache': 'Clear Cached Data',
   'settings.clearCache.hint': 'Reloads catalogs from your add-ons.',
   'settings.clearHistory': 'Clear Library and History',

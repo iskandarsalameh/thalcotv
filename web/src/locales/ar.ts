@@ -275,6 +275,8 @@ const dict: Record<string, string> = {
   'settings.server.remove.message': 'لن تعود مصادر التورنت قابلة للتشغيل.',
   'settings.hideAdult': 'إخفاء إضافات البالغين',
   'settings.reduceMotion': 'تقليل الحركة',
+  'settings.reduceTransparency': 'تقليل الشفافية',
+  'settings.reduceTransparency.hint': 'يوقف تأثير الزجاج الضبابي. جرّبه إن شعرت ببطء الواجهة.',
   'settings.clearCache': 'مسح البيانات المؤقتة',
   'settings.clearCache.hint': 'يعيد تحميل القوائم من إضافاتك.',
   'settings.clearHistory': 'مسح المكتبة والسجل',

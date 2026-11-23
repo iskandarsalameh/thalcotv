@@ -275,6 +275,8 @@ const dict: Record<string, string> = {
   'settings.server.remove.message': 'Torrent-Quellen sind dann nicht mehr abspielbar.',
   'settings.hideAdult': 'Add-ons für Erwachsene ausblenden',
   'settings.reduceMotion': 'Bewegung reduzieren',
+  'settings.reduceTransparency': 'Transparenz reduzieren',
+  'settings.reduceTransparency.hint': 'Schaltet die Glasunschärfe ab. Hilft, wenn die Oberfläche träge wirkt.',
   'settings.clearCache': 'Cache leeren',
   'settings.clearCache.hint': 'Lädt die Kataloge deiner Add-ons neu.',
   'settings.clearHistory': 'Bibliothek und Verlauf löschen',

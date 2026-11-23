@@ -2381,3 +2381,323 @@ img + .hero-title-backup {
 .card-fallback {
   animation: fade-in 0.3s linear 1.2s both;
 }
+
+/* ==== Liquid glass ============================================================
+ * Controls and panels are glass: a translucent fill that is brighter at the
+ * top, a thin bright rim that catches light, a soft shadow underneath, and
+ * (where there is artwork or video behind) a real blur of what lies beneath.
+ * Shapes are capsules and generous curves rather than boxes, with inner radii
+ * that follow their container's.
+ *
+ * Blur is the only costly part, so it is applied to a handful of small or
+ * floating surfaces, switched off by Settings > Reduce Transparency, and
+ * skipped on engines without backdrop-filter. Everything still reads as glass
+ * without it.
+ */
+
+:root {
+  --glass: linear-gradient(180deg, rgba(255, 255, 255, 0.17) 0%, rgba(255, 255, 255, 0.07) 100%);
+  --glass-strong: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.14) 100%);
+  --glass-quiet: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.045) 100%);
+  /* Rim: a bright top edge, a faint ring, a whisper of shade at the bottom. */
+  --glass-rim: inset 0 0.07rem 0 rgba(255, 255, 255, 0.34), inset 0 0 0 0.06rem rgba(255, 255, 255, 0.1), inset 0 -0.07rem 0 rgba(0, 0, 0, 0.18);
+  --glass-drop: 0 0.7rem 1.8rem rgba(0, 0, 0, 0.3);
+  --glass-lit: linear-gradient(180deg, #ffffff 0%, #ececf1 100%);
+  --glass-lit-shadow: inset 0 0.07rem 0 #fff, 0 1.1rem 2.6rem rgba(0, 0, 0, 0.5), 0 0 2.2rem rgba(255, 255, 255, 0.16);
+  --blur: blur(1.5rem) saturate(1.7);
+  --blur-deep: blur(2.6rem) saturate(1.8);
+}
+
+/* ---- shapes ---- */
+
+.btn {
+  border-radius: 2.2rem;
+  padding: 0 2.3rem;
+}
+
+.card-art,
+.skeleton-poster {
+  border-radius: 1.35rem;
+}
+
+.setting {
+  border-radius: 1.9rem;
+  padding-inline: 2.1rem;
+}
+
+.option {
+  border-radius: 1.8rem;
+  padding-inline: 1.8rem;
+}
+
+.stream {
+  border-radius: 1.9rem;
+  padding-inline: 2rem;
+}
+
+.addon-card {
+  border-radius: 2.4rem;
+}
+
+.addon-logo {
+  border-radius: 1.7rem;
+}
+
+.addon-logo-lg {
+  border-radius: 3.2rem;
+}
+
+.sheet {
+  border-radius: 3.2rem;
+  padding: 2.75rem;
+}
+
+.input-field {
+  border-radius: 2.4rem;
+  padding-inline: 1.9rem;
+}
+
+.key {
+  border-radius: 1.5rem;
+}
+
+.kb-switch {
+  border-radius: 1.9rem;
+}
+
+.kb-seg {
+  border-radius: 1.6rem;
+}
+
+.side-item {
+  border-radius: 2.3rem;
+  padding: 0 1.6rem;
+}
+
+.credits-card {
+  border-radius: 2.4rem;
+}
+
+.upnext {
+  border-radius: 2.8rem;
+}
+
+.pair-code {
+  border-radius: 2.8rem;
+}
+
+.qr {
+  border-radius: 1.9rem;
+}
+
+.tag {
+  border-radius: 1rem;
+}
+
+.history-item {
+  border-radius: 1.7rem;
+}
+
+.progress,
+.scrub {
+  border-radius: 1rem;
+}
+
+/* ---- glass surfaces ---- */
+
+.btn,
+.chip,
+.pbtn,
+.setting,
+.option,
+.stream,
+.addon-card,
+.credits-card,
+.side-pill,
+.kb-switch,
+.input-field,
+.toast,
+.update-pill,
+.pair-num,
+.key-submit {
+  background: var(--glass);
+  box-shadow: var(--glass-rim);
+}
+
+.btn-primary,
+.chip-on,
+.chip-accent,
+.pbtn-on,
+.kb-seg-on,
+.side-pill-icon {
+  background: var(--glass-strong);
+  box-shadow: var(--glass-rim);
+}
+
+.setting,
+.option,
+.stream,
+.addon-card,
+.credits-card,
+.input-field,
+.kb-switch {
+  background: var(--glass-quiet);
+}
+
+.side-item-on {
+  background: var(--glass-quiet);
+  box-shadow: var(--glass-rim);
+}
+
+.side-pill,
+.toast,
+.btn,
+.pbtn {
+  box-shadow: var(--glass-rim), var(--glass-drop);
+}
+
+.scrub {
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 0.06rem 0 rgba(255, 255, 255, 0.25);
+}
+
+/* ---- lit glass: the focused state glows instead of just turning white ---- */
+
+.btn:focus,
+.chip:focus,
+.pbtn:focus,
+.setting:focus,
+.option:focus,
+.stream:focus,
+.addon-card:focus,
+.side-pill:focus,
+.side-item:focus,
+.kb-seg:focus,
+.key:focus,
+.history-item:focus {
+  background: var(--glass-lit);
+  box-shadow: var(--glass-lit-shadow);
+}
+
+.btn-destructive:focus,
+.option-destructive:focus {
+  background: linear-gradient(180deg, #ff6a60 0%, var(--red) 100%);
+  box-shadow: inset 0 0.07rem 0 rgba(255, 255, 255, 0.45), 0 1.1rem 2.6rem rgba(0, 0, 0, 0.5), 0 0 2.2rem rgba(255, 69, 58, 0.3);
+}
+
+.credits-card:focus {
+  background: var(--glass-strong);
+}
+
+.key-live,
+.key-live:focus {
+  background: linear-gradient(180deg, #ff6a60 0%, var(--red) 100%);
+  color: #fff;
+}
+
+/* Artwork: rounder, with a soft ring and a sheen of light across the focused card. */
+.card-art::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(125deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.07) 26%, rgba(255, 255, 255, 0) 48%);
+  box-shadow: inset 0 0.07rem 0 rgba(255, 255, 255, 0.5), inset 0 0 0 0.06rem rgba(255, 255, 255, 0.16);
+  opacity: 0;
+  transition: opacity 0.25s linear;
+  pointer-events: none;
+}
+
+.card:focus .card-art::after {
+  opacity: 1;
+}
+
+.card:focus .card-art {
+  box-shadow:
+    0 0 0 0.17rem rgba(255, 255, 255, 0.9),
+    0 1.8rem 3.4rem rgba(0, 0, 0, 0.7),
+    0 0 2.6rem rgba(255, 255, 255, 0.14);
+}
+
+.progress {
+  background: rgba(255, 255, 255, 0.28);
+  box-shadow: inset 0 0.05rem 0 rgba(255, 255, 255, 0.3);
+}
+
+.badge-watched {
+  background: rgba(30, 30, 34, 0.6);
+  box-shadow: var(--glass-rim);
+}
+
+/* ---- floating panels ---- */
+
+.sheet,
+.upnext {
+  background: linear-gradient(180deg, rgba(58, 58, 64, 0.97) 0%, rgba(34, 34, 38, 0.98) 100%);
+  box-shadow: var(--glass-rim), 0 2.5rem 6rem rgba(0, 0, 0, 0.65);
+}
+
+/* The sidebar floats clear of the screen edges instead of filling the side. */
+.sidebar-panel {
+  top: 1.5rem;
+  bottom: 1.5rem;
+  inset-inline-start: 1.5rem;
+  width: 26.5rem;
+  padding: 2.4rem 2rem 2.2rem;
+  border-radius: 3.2rem;
+  background: linear-gradient(180deg, rgba(44, 44, 50, 0.98) 0%, rgba(24, 24, 28, 0.98) 100%);
+  box-shadow: var(--glass-rim), 0 2rem 5rem rgba(0, 0, 0, 0.6);
+  transform: translate3d(-110%, 0, 0);
+}
+
+[dir='rtl'] .sidebar-panel {
+  transform: translate3d(110%, 0, 0);
+  box-shadow: var(--glass-rim), 0 2rem 5rem rgba(0, 0, 0, 0.6);
+}
+
+.sidebar-open .sidebar-panel {
+  transform: none;
+}
+
+.sidebar-scrim {
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.42) 45%, rgba(0, 0, 0, 0.25) 100%);
+}
+
+.overlay {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* ---- real blur, where something worth blurring sits behind ---- */
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .app:not(.reduce-transparency) .side-pill,
+  .app:not(.reduce-transparency) .pbtn,
+  .app:not(.reduce-transparency) .toast,
+  .app:not(.reduce-transparency) .hero .btn,
+  .app:not(.reduce-transparency) .details-top .btn,
+  .app:not(.reduce-transparency) .finding .btn {
+    -webkit-backdrop-filter: var(--blur);
+    backdrop-filter: var(--blur);
+  }
+
+  .app:not(.reduce-transparency) .sidebar-panel {
+    background: linear-gradient(180deg, rgba(70, 70, 78, 0.5) 0%, rgba(28, 28, 32, 0.6) 100%);
+    -webkit-backdrop-filter: var(--blur-deep);
+    backdrop-filter: var(--blur-deep);
+  }
+
+  .app:not(.reduce-transparency) .sheet,
+  .app:not(.reduce-transparency) .upnext {
+    background: linear-gradient(180deg, rgba(74, 74, 82, 0.56) 0%, rgba(30, 30, 34, 0.66) 100%);
+    -webkit-backdrop-filter: var(--blur-deep);
+    backdrop-filter: var(--blur-deep);
+  }
+
+  /* Lit (focused) glass is opaque: no need to pay for a blur under it. */
+  .app .side-pill:focus,
+  .app .pbtn:focus,
+  .app .btn:focus {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}

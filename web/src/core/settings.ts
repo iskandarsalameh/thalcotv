@@ -29,6 +29,8 @@ export interface Settings {
   /** Hide catalogs flagged as adult by their add-on. */
   hideAdult: boolean;
   reduceMotion: boolean;
+  /** Replace blurred glass with plain translucent surfaces (lighter on the GPU). */
+  reduceTransparency: boolean;
   /** Target forward buffer in seconds for adaptive (HLS) streams. */
   bufferSeconds: number;
   onboarded: boolean;
@@ -51,6 +53,7 @@ export const DEFAULT_SETTINGS: Settings = {
   streamingServerUrl: '',
   hideAdult: true,
   reduceMotion: false,
+  reduceTransparency: false,
   bufferSeconds: 60,
   onboarded: false,
 };

@@ -275,6 +275,8 @@ const dict: Record<string, string> = {
   'settings.server.remove.message': 'Las fuentes torrent dejarán de poder reproducirse.',
   'settings.hideAdult': 'Ocultar complementos para adultos',
   'settings.reduceMotion': 'Reducir movimiento',
+  'settings.reduceTransparency': 'Reducir transparencia',
+  'settings.reduceTransparency.hint': 'Desactiva el desenfoque de cristal. Pruébalo si la interfaz va lenta.',
   'settings.clearCache': 'Borrar datos en caché',
   'settings.clearCache.hint': 'Vuelve a cargar los catálogos de tus complementos.',
   'settings.clearHistory': 'Borrar biblioteca e historial',

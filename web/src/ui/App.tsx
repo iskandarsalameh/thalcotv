@@ -224,7 +224,7 @@ export function App() {
   // The screen that just left stays in the list (same key, same instance) until its exit animation ends.
   const rendered = tr?.leaving && !layers.some((e) => e.key === tr.leaving!.key) ? layers.concat(tr.leaving) : layers;
   return (
-    <div class={'app' + (settings.value.reduceMotion ? ' reduce-motion' : '')}>
+    <div class={'app' + (settings.value.reduceMotion ? ' reduce-motion' : '') + (settings.value.reduceTransparency ? ' reduce-transparency' : '')}>
       <div
         class={'layer layer-root' + (rootActive ? ' layer-top' : '') + entering('root') + (rootActive || tr?.under === 'root' ? '' : ' layer-hidden')}
         ref={rootLayer}

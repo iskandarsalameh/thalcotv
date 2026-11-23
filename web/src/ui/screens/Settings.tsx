@@ -72,7 +72,7 @@ export function SettingsScreen({ active }: { active: boolean }) {
   }, [s.streamingServerUrl]);
 
   const langOptions = (offLabel: string): MenuOption<string>[] => [{ value: '', label: offLabel }, ...languageChoices().map((l) => ({ value: l.code, label: l.name }))];
-  const toggle = (key: 'autoPlayBest' | 'autoFailover' | 'autoPlayNext' | 'hideAdult' | 'reduceMotion') => updateSettings({ [key]: !s[key] } as Partial<Settings>);
+  const toggle = (key: 'autoPlayBest' | 'autoFailover' | 'autoPlayNext' | 'hideAdult' | 'reduceMotion' | 'reduceTransparency') => updateSettings({ [key]: !s[key] } as Partial<Settings>);
 
   const pickUiLanguage = async () => {
     const v = await openMenu(t('settings.appLanguage'), [
@@ -255,6 +255,12 @@ export function SettingsScreen({ active }: { active: boolean }) {
         <Section title={t('settings.section.general')}>
           <Item label={t('settings.hideAdult')} value={onOff(s.hideAdult)} onSelect={() => toggle('hideAdult')} />
           <Item label={t('settings.reduceMotion')} value={onOff(s.reduceMotion)} onSelect={() => toggle('reduceMotion')} />
+          <Item
+            label={t('settings.reduceTransparency')}
+            hint={t('settings.reduceTransparency.hint')}
+            value={onOff(s.reduceTransparency)}
+            onSelect={() => toggle('reduceTransparency')}
+          />
           <Item label={t('settings.clearCache')} hint={t('settings.clearCache.hint')} onSelect={clearCache} />
           <Item label={t('settings.clearHistory')} hint={t('settings.clearHistory.hint', { n: libraryCount })} onSelect={() => void clearHistory()} />
           <Item label={t('settings.reset')} hint={t('settings.reset.hint')} onSelect={() => void resetAll()} />

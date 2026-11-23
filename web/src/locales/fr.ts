@@ -275,6 +275,8 @@ const dict: Record<string, string> = {
   'settings.server.remove.message': 'Les sources torrent ne seront plus lisibles.',
   'settings.hideAdult': 'Masquer les extensions pour adultes',
   'settings.reduceMotion': 'Réduire les animations',
+  'settings.reduceTransparency': 'Réduire la transparence',
+  'settings.reduceTransparency.hint': 'Désactive le flou de verre. À essayer si l’interface est lente.',
   'settings.clearCache': 'Vider le cache',
   'settings.clearCache.hint': 'Recharge les catalogues depuis vos extensions.',
   'settings.clearHistory': "Effacer la bibliothèque et l'historique",
