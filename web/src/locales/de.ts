@@ -69,6 +69,9 @@ const dict: Record<string, string> = {
 
   'search.placeholder': 'Filme, Serien und mehr',
   'search.recent': 'Zuletzt gesucht',
+  'search.remove': 'Aus Verlauf entfernen',
+  'search.clearAll': 'Letzte Suchen löschen',
+  'search.clear': 'Löschen',
   'search.searching': 'Suche läuft…',
   'search.hint.title': 'Suche',
   'search.hint.message': 'Gib mindestens zwei Buchstaben ein. Die Ergebnisse kommen von allen deinen Add-ons.',

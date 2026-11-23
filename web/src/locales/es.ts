@@ -69,6 +69,9 @@ const dict: Record<string, string> = {
 
   'search.placeholder': 'Películas, series y más',
   'search.recent': 'Recientes',
+  'search.remove': 'Quitar de recientes',
+  'search.clearAll': 'Borrar búsquedas recientes',
+  'search.clear': 'Borrar',
   'search.searching': 'Buscando…',
   'search.hint.title': 'Buscar',
   'search.hint.message': 'Escribe al menos dos letras. Los resultados vienen de todos tus complementos.',

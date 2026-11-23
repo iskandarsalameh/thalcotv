@@ -2888,3 +2888,9 @@ img + .hero-title-backup {
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }
+
+.history-clear {
+  gap: 0.6rem;
+  font-size: 1.3rem;
+  color: var(--text-3);
+}

@@ -69,6 +69,9 @@ const en: Record<string, string> = {
 
   'search.placeholder': 'Movies, series and more',
   'search.recent': 'Recent',
+  'search.remove': 'Remove from Recent',
+  'search.clearAll': 'Clear Recent Searches',
+  'search.clear': 'Clear',
   'search.searching': 'Searching…',
   'search.hint.title': 'Search',
   'search.hint.message': 'Type at least two letters. Results come from all your add-ons.',

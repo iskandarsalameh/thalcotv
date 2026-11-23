@@ -10,6 +10,7 @@ import { Focusable } from '../components/Focusable';
 import { Icon } from '../components/Icon';
 import { EmptyState, Spinner } from '../components/Overlays';
 import { openDetails, posterMenu } from '../actions';
+import { openMenu } from '../overlay';
 import { ensureFocus } from '../../nav/spatial';
 import type { MetaPreview } from '../../core/types';
 
@@ -70,6 +71,24 @@ export function SearchScreen({ active }: { active: boolean }) {
     openDetails(m);
   };
 
+  const saveHistory = (list: string[]) => {
+    writeJSON(HISTORY_KEY, list);
+    setHistory(list);
+  };
+  // Removing a row can remove the focused element; pick focus back up once the list has redrawn.
+  useEffect(() => {
+    if (active) ensureFocus(rootRef.current);
+  }, [history.length]);
+  // Hold Select on a recent search to remove it.
+  const historyMenu = async (h: string) => {
+    const v = await openMenu(h, [
+      { value: 'remove', label: t('search.remove') },
+      { value: 'clear', label: t('search.clearAll') },
+    ]);
+    if (v === 'remove') saveHistory(history.filter((x) => x !== h));
+    if (v === 'clear') saveHistory([]);
+  };
+
   const q = query.trim();
   return (
     <div class="screen screen-search" data-focus-group="" ref={rootRef}>
@@ -84,10 +103,13 @@ export function SearchScreen({ active }: { active: boolean }) {
           <div class="search-history" data-focus-group="">
             <div class="section-label">{t('search.recent')}</div>
             {history.slice(0, 4).map((h) => (
-              <Focusable class="history-item" key={h} onSelect={() => setQuery(h)}>
+              <Focusable class="history-item" key={h} onSelect={() => setQuery(h)} onLongPress={() => void historyMenu(h)}>
                 {h}
               </Focusable>
             ))}
+            <Focusable class="history-item history-clear" onSelect={() => saveHistory([])}>
+              <Icon name="trash" /> {t("search.clear")}
+            </Focusable>
           </div>
         )}
       </div>

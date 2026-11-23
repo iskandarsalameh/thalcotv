@@ -5,7 +5,7 @@ import { applyLocale, LOCALES, t } from '../../core/i18n';
 import { langName, languageChoices } from '../../core/langs';
 import { caps } from '../../core/caps';
 import { normalizeServerUrl, probeServer } from '../../core/server';
-import { clearByPrefix } from '../../core/storage';
+import { clearByPrefix, writeJSON } from '../../core/storage';
 import { addons, clearResourceCache, resetAddons, initAddons } from '../../core/addons';
 import { push } from '../../nav/router';
 import { clearLibrary, library } from '../../core/library';
@@ -132,6 +132,7 @@ export function SettingsScreen({ active }: { active: boolean }) {
   const clearHistory = async () => {
     if (!(await confirm(t('settings.clearHistory.title'), t('settings.clearHistory.message'), t('settings.clearHistory.action'), t('common.cancel'), true))) return;
     clearLibrary();
+    writeJSON('searchHistory', []);
     showToast(t('settings.cleared'), 'check');
   };
   const clearCache = () => {
