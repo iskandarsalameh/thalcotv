@@ -21,7 +21,7 @@ export interface GridProps<T> {
 export function Grid<T>(props: GridProps<T>) {
   const { items, columns, rowHeight, itemWidth, render, keyOf } = props;
   const gap = props.gap ?? 2;
-  const peek = props.peek ?? 3;
+  const peek = props.peek ?? 0.4;
   const rows = Math.ceil(items.length / columns);
   const [row, setRow] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);

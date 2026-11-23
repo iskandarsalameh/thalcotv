@@ -14,7 +14,7 @@ import { EmptyState, Loading } from '../components/Overlays';
 import { openDetails, playFromPreview, posterMenu } from '../actions';
 import { chromeHidden } from '../state';
 import { switchTab } from '../../nav/router';
-import { ensureFocus } from '../../nav/spatial';
+import { ensureFocus, focusFirst, getFocused, hasInteracted } from '../../nav/spatial';
 
 export function catalogTitle(ref: CatalogRef): string {
   const raw = ref.catalog.name || ref.addon.manifest.name;
@@ -158,6 +158,7 @@ export function HomeScreen({ active }: { active: boolean }) {
   const [featured, setFeatured] = useState<MetaPreview[]>(() => (refs[0] ? (peekCatalog(refs[0]) ?? []) : []));
   const rootRef = useRef<HTMLDivElement>(null);
   const cw = continueWatching(library.value);
+  const withArt = featured.filter((m) => m.background);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -171,10 +172,11 @@ export function HomeScreen({ active }: { active: boolean }) {
   }, []);
 
   useEffect(() => {
-    if (active) ensureFocus(rootRef.current);
+    if (!active) return;
+    // On launch focus belongs on the content, not the tab bar.
+    if (!hasInteracted() && withArt.length > 0 && !rootRef.current?.contains(getFocused())) focusFirst(rootRef.current);
+    else ensureFocus(rootRef.current);
   }, [active, featured.length > 0, refs.length]);
-
-  const withArt = featured.filter((m) => m.background);
 
   return (
     <div class="screen screen-home" data-focus-group="" ref={rootRef}>
@@ -220,6 +222,7 @@ export function HomeScreen({ active }: { active: boolean }) {
         )}
         <div class="page-end" />
       </Scroller>
+      <div class={'top-fade' + (chromeHidden.value ? ' top-fade-on' : '')} />
     </div>
   );
 }

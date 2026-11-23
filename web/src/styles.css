@@ -1854,3 +1854,19 @@ img + .hero-title-backup {
   margin-top: 2.5rem;
   max-width: 80rem;
 }
+
+/* Softens rows that scroll out under the top edge. */
+.top-fade {
+  position: absolute;
+  top: 0;
+  inset-inline: 0;
+  height: 3.5rem;
+  background: linear-gradient(180deg, #000 0%, #000 45%, rgba(0, 0, 0, 0) 100%);
+  opacity: 0;
+  transition: opacity 0.3s linear;
+  pointer-events: none;
+}
+
+.top-fade-on {
+  opacity: 1;
+}

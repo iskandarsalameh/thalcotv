@@ -213,14 +213,17 @@ export function PlayerScreen({ active, meta, video, streams, index, startAt }: P
       if (mode === 'native') {
         engineRef.current?.destroy();
         engineRef.current = null;
+        const cues = await nativeCues();
+        if (token !== S.token) return;
         const ok = nativeBridge.playNative({
           url,
           title: meta.name,
           subtitle: video ? t('episode.full', { s: video.season ?? 1, e: episodeNumber(video), title: videoTitle(video) }) : '',
           startAt: atSec,
-          subtitles: subTracksRef.current.slice(0, 40).map((tr) => ({ url: tr.url, lang: tr.lang, label: langName(tr.lang) })),
-          subtitleLang: normLang(getItem(meta.id)?.prefs?.subtitleLang ?? settings.value.subtitleLanguage),
+          cues,
+          subtitlesOn: cues.length > 0,
           hasNext: !!next,
+          seekStep: settings.value.seekStep,
         });
         if (!ok) throw new PlaybackError('native player unavailable', 'unsupported');
         S.nativeTime = atSec;
@@ -257,7 +260,31 @@ export function PlayerScreen({ active, meta, video, streams, index, startAt }: P
   };
 
   const subTracksRef = useRef<SubtitleTrack[]>([]);
+  const subTracksReady = useRef<Promise<SubtitleTrack[]> | null>(null);
   const speedRef = useRef(1);
+
+  /** Subtitles for the native player: it renders plain cues, so pick and parse here. */
+  const nativeCues = async (): Promise<{ s: number; e: number; t: string }[]> => {
+    const pref = getItem(meta.id)?.prefs?.subtitleLang;
+    if (pref === null) return [];
+    const wanted = [pref ?? settings.value.subtitleLanguage, settings.value.secondarySubtitleLanguage].map((l) => normLang(l)).filter(Boolean);
+    if (!wanted.length) return [];
+    const wait = <T,>(p: Promise<T>, ms: number, fallback: T) => Promise.race([p, new Promise<T>((r) => setTimeout(() => r(fallback), ms))]);
+    const tracks = await wait(subTracksReady.current ?? Promise.resolve([] as SubtitleTrack[]), 6000, subTracksRef.current);
+    for (const lang of wanted) {
+      for (const track of tracks.filter((x) => x.lang === lang).slice(0, 2)) {
+        const cues = await wait(fetchCues(track).catch(() => [] as Cue[]), 7000, [] as Cue[]);
+        if (cues.length) {
+          return cues.map((c) => ({
+            s: c.start,
+            e: c.end,
+            t: c.html.replace(/<br>/g, '\n').replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&'),
+          }));
+        }
+      }
+    }
+    return [];
+  };
 
   const onStarted = (i: number) => {
     const s = streams[i];
@@ -432,6 +459,18 @@ export function PlayerScreen({ active, meta, video, streams, index, startAt }: P
   useEffect(() => {
     const v = videoRef.current!;
     const initial = startAt !== undefined ? startAt / 1000 : resumePoint(getItem(meta.id), videoId) / 1000;
+
+    // Subtitle list arrives in the background; playback never waits for it.
+    const ctrl = new AbortController();
+    subTracksReady.current = loadSubtitleTracks(meta.type, videoId, streams[index]?.stream, ctrl.signal).then((tracks) => {
+      const ordered = orderTracks(tracks, [settings.value.subtitleLanguage, settings.value.secondarySubtitleLanguage]);
+      if (ctrl.signal.aborted) return ordered;
+      subTracksRef.current = ordered;
+      setSubTracks(ordered);
+      if (S.started) autoSelectSubtitle();
+      return ordered;
+    });
+
     void attempt(index, modesFor(streams[index] ?? streams[0])[0], initial);
 
     const onPlaying = () => {
@@ -508,16 +547,6 @@ export function PlayerScreen({ active, meta, video, streams, index, startAt }: P
       }
     }, 200);
 
-    // Subtitle list arrives in the background; playback never waits for it.
-    const ctrl = new AbortController();
-    loadSubtitleTracks(meta.type, videoId, streams[index]?.stream, ctrl.signal).then((tracks) => {
-      if (ctrl.signal.aborted) return;
-      const ordered = orderTracks(tracks, [settings.value.subtitleLanguage, settings.value.secondarySubtitleLanguage]);
-      subTracksRef.current = ordered;
-      setSubTracks(ordered);
-      if (S.started) autoSelectSubtitle();
-    });
-
     const offNative = nativeBridge.subscribe((msg) => {
       if (S.mode !== 'native') return;
       switch (msg.type) {
@@ -532,7 +561,9 @@ export function PlayerScreen({ active, meta, video, streams, index, startAt }: P
           else exit();
           break;
         case 'nativeNext':
-          goNext();
+          S.nativeTime = S.nativeDuration;
+          if (settings.value.autoPlayNext) goNext();
+          else exit();
           break;
         case 'nativeClosed':
           exit();
@@ -591,7 +622,8 @@ export function PlayerScreen({ active, meta, video, streams, index, startAt }: P
     if (!active) return;
     const offKey = addKeyHandler((_e: KeyboardEvent, action: Action) => {
       if (overlays.value.length > 0) return false;
-      if (S.mode === 'native' && S.phase === 'native') return true;
+      // The native player owns the remote; only Back is ours (it closes the player).
+      if (S.mode === 'native' && S.phase === 'native') return action !== 'back';
       if (S.phase === 'ended' || S.phase === 'error') return false;
       const onScrub = getFocused() === scrubRef.current;
       switch (action) {

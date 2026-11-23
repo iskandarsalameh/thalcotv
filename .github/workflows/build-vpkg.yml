@@ -1,0 +1,94 @@
+# Builds the Vega OS package (.vpkg) for Fire TV Stick 4K Select.
+# The package is only the shell around the interface, so it changes rarely:
+# it is rebuilt when vega/ changes or when started by hand.
+name: Build vpkg
+
+on:
+  push:
+    branches: [main, 'claude/**']
+    paths:
+      - 'vega/**'
+      - '.github/workflows/build-vpkg.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vpkg-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      NONINTERACTIVE: 'true'
+      SKIP_VVD_INSTALL: 'true'
+      # Set a repository variable to pin the SDK; empty means the newest release.
+      VEGA_SDK_VERSION: ${{ vars.VEGA_SDK_VERSION }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install build prerequisites
+        run: sudo apt-get update && sudo apt-get install -y jq lz4 build-essential
+
+      - name: Install the Vega SDK
+        run: |
+          curl -fsSL https://sdk-installer.vega.labcollab.net/get_vvm.sh | bash
+          echo "$HOME/vega/bin" >> "$GITHUB_PATH"
+
+      - name: Point the shell at the published interface
+        if: ${{ vars.THALCO_APP_URL != '' }}
+        working-directory: vega
+        env:
+          THALCO_APP_URL: ${{ vars.THALCO_APP_URL }}
+        run: sed -i "s|^export const APP_URL = .*|export const APP_URL = '${THALCO_APP_URL}';|" src/config.ts
+
+      - name: Stamp the build number
+        working-directory: vega
+        run: |
+          sed -i "s/^build-number = .*/build-number = ${{ github.run_number }}/" manifest.toml
+          grep -n 'build-number\|APP_URL' manifest.toml src/config.ts
+
+      - name: Install dependencies
+        working-directory: vega
+        run: |
+          source "$HOME/vega/env"
+          vega --version
+          npm install
+
+      - name: Build
+        working-directory: vega
+        run: |
+          source "$HOME/vega/env"
+          npm run build:release
+
+      - name: Collect packages
+        run: |
+          mkdir -p out
+          find vega/build -name '*.vpkg' -print -exec cp {} out/ \;
+          ls -la out
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: thalcotv-vpkg
+          path: out/*.vpkg
+          if-no-files-found: error
+
+      - name: Publish to the "latest" release
+        if: github.event_name != 'pull_request'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: vpkg-latest
+          name: Thalco TV package (build ${{ github.run_number }})
+          body: |
+            Install `thalcotv_armv7.vpkg` on a Fire TV Stick 4K Select. See docs/INSTALL.md.
+            The interface updates itself from the repository; this package only needs
+            reinstalling when the shell in `vega/` changes.
+          files: out/*.vpkg
+          make_latest: true

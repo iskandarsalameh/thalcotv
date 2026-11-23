@@ -1,0 +1,67 @@
+schema-version = 1
+
+[package]
+title = "Thalco TV"
+version = "0.1.0"
+# Raised automatically by CI (one per build) so newer packages install over older ones.
+build-number = 1
+id = "com.thalco.tv"
+icon = "@image/icon.png"
+
+[os.version]
+min = "2.0"
+target = "2.0"
+
+[needs]
+[[needs.module]]
+id = "/com.amazon.vega.os@IVega_1_2"
+
+[components]
+[[components.interactive]]
+id = "com.thalco.tv.main"
+runtime-module = "/com.amazon.kepler.runtime.react_native_kepler_4@IReactNativeKepler_0"
+launch-type = "singleton"
+categories = ["com.amazon.category.main"]
+
+# Add-ons, a LAN streaming server and some stream hosts are plain HTTP.
+[network-traffic-policy.cleartext]
+allowed-domains = ["*"]
+
+[wants]
+# Web renderer service for rendering web content
+[[wants.service]]
+id = "com.amazon.webview.renderer_service"
+
+# On-screen keyboard support
+[[wants.service]]
+id = "com.amazon.inputmethod.service"
+
+# Video playback (WebView and the native player)
+[[wants.service]]
+id = "com.amazon.media.server"
+[[wants.service]]
+id = "com.amazon.mediametrics.service"
+[[wants.service]]
+id = "com.amazon.mediabuffer.service"
+[[wants.service]]
+id = "com.amazon.mediatransform.service"
+[[wants.service]]
+id = "com.amazon.media.playersession.service"
+
+# Audio playback, audio focus and volume
+[[wants.service]]
+id = "com.amazon.audio.stream"
+[[wants.service]]
+id = "com.amazon.audio.control"
+
+# Accessibility
+[[wants.service]]
+id = "com.amazon.kepler.ucc.publisher"
+
+# Group-IPC to reach the media services
+[[wants.service]]
+id = "com.amazon.gipc.uuid.*"
+
+[offers]
+[[offers.service]]
+id = "com.amazon.gipc.uuid.*"

@@ -16,9 +16,11 @@ export interface NativePlayRequest {
   subtitle?: string;
   /** Seconds. */
   startAt: number;
-  subtitles: { url: string; lang: string; label: string }[];
-  subtitleLang: string;
+  /** Subtitle cues already decoded and parsed: [startMs, endMs, plain text]. */
+  cues: { s: number; e: number; t: string }[];
+  subtitlesOn: boolean;
   hasNext: boolean;
+  seekStep: number;
 }
 
 interface ShellInfo {

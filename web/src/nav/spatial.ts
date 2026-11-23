@@ -318,9 +318,17 @@ function clearLongPress(): void {
   }
 }
 
+let interacted = false;
+
+/** False until the viewer presses a key; lets screens place initial focus on content. */
+export function hasInteracted(): boolean {
+  return interacted;
+}
+
 function onKeyDown(e: KeyboardEvent): void {
   const action = actionOf(e);
   if (action === 'other') return;
+  interacted = true;
   // Text typed on a physical keyboard into a real input is left alone.
   const tag = (e.target as HTMLElement | null)?.tagName;
   if ((tag === 'INPUT' || tag === 'TEXTAREA') && (action === 'back' ? e.key === 'Backspace' : e.key === ' ')) return;
