@@ -17,7 +17,7 @@ import {
   useHideSplashScreenCallback,
   usePreventHideSplashScreen,
 } from '@amazon-devices/react-native-kepler';
-import {APP_URL, LOAD_TIMEOUT_S, SHELL_VERSION} from './config';
+import {APP_URL, BUNDLED_URL, LOAD_TIMEOUT_S, SHELL_VERSION} from './config';
 import {NativePlayer, NativePlayRequest} from './NativePlayer';
 
 const STORE_PREFIX = 'thalco:';
@@ -43,19 +43,26 @@ async function readStore(): Promise<Record<string, string>> {
 }
 
 /** Script that runs before the page: tells the web app what the shell offers. */
-function bootstrapScript(store: Record<string, string>): string {
+function bootstrapScript(store: Record<string, string>, bundled: boolean): string {
   const info = {
     shell: 'vega',
     shellVersion: SHELL_VERSION,
     platform: 'firetv',
     nativePlayer: true,
+    // True when running the copy inside the package instead of the hosted one.
+    bundled,
     store,
   };
-  // JSON is valid JavaScript once the two line separators are escaped.
+  // JSON is valid JavaScript once the two Unicode line separators are escaped.
+  const LS = String.fromCharCode(0x2028);
+  const PS = String.fromCharCode(0x2029);
   const json = JSON.stringify(info)
-    .replace(/ /g, '\\u2028')
-    .replace(/ /g, '\\u2029')
-    .replace(/</g, '\\u003c');
+    .split(LS)
+    .join('\\u2028')
+    .split(PS)
+    .join('\\u2029')
+    .split('<')
+    .join('\\u003c');
   return `window.__THALCO_SHELL__ = ${json}; true;`;
 }
 
@@ -65,6 +72,10 @@ export const App = () => {
   const [attempt, setAttempt] = useState(0);
   const [bootstrap, setBootstrap] = useState('');
   const [failure, setFailure] = useState('');
+  // Start with the hosted interface; fall back to the packaged copy if it cannot load.
+  const [bundled, setBundled] = useState(false);
+  const bundledRef = useRef(false);
+  bundledRef.current = bundled;
   const [nativePlay, setNativePlay] = useState<NativePlayRequest | null>(null);
   const phaseRef = useRef<Phase>('restoring');
   phaseRef.current = phase;
@@ -81,13 +92,33 @@ export const App = () => {
       if (!alive) {
         return;
       }
-      setBootstrap(bootstrapScript(store));
+      setBootstrap(bootstrapScript(store, bundledRef.current));
       setPhase('loading');
     });
     return () => {
       alive = false;
     };
   }, [attempt]);
+
+  /** The interface could not be loaded: try the packaged copy once, then give up. */
+  const loadFailed = useCallback(
+    (reason: string) => {
+      if (phaseRef.current === 'ready' || phaseRef.current === 'failed') {
+        return;
+      }
+      if (!bundledRef.current) {
+        console.warn('[thalco] hosted interface unavailable, using the packaged copy:', reason);
+        setBundled(true);
+        setPhase('restoring');
+        setAttempt(n => n + 1);
+        return;
+      }
+      setFailure(reason);
+      setPhase('failed');
+      hideSplash();
+    },
+    [hideSplash],
+  );
 
   // 2. Give up waiting after a while and offer a retry.
   useEffect(() => {
@@ -96,13 +127,11 @@ export const App = () => {
     }
     const timer = setTimeout(() => {
       if (phaseRef.current === 'loading') {
-        setFailure('The Thalco TV interface did not respond in time.');
-        setPhase('failed');
-        hideSplash();
+        loadFailed('The Thalco TV interface did not respond in time.');
       }
     }, LOAD_TIMEOUT_S * 1000);
     return () => clearTimeout(timer);
-  }, [phase, attempt, hideSplash]);
+  }, [phase, attempt, loadFailed]);
 
   const sendToWeb = useCallback((message: Record<string, unknown>) => {
     const payload = JSON.stringify(
@@ -191,6 +220,8 @@ export const App = () => {
   const retry = useCallback(() => {
     setFailure('');
     setNativePlay(null);
+    setBundled(false);
+    bundledRef.current = false;
     setPhase('restoring');
     setAttempt(n => n + 1);
   }, []);
@@ -202,7 +233,7 @@ export const App = () => {
           key={attempt}
           ref={webRef}
           style={styles.webview}
-          source={{uri: APP_URL}}
+          source={{uri: bundled ? BUNDLED_URL : APP_URL}}
           injectedJavaScriptBeforeContentLoaded={bootstrap}
           onMessage={onMessage}
           allowSystemKeyEvents
@@ -213,24 +244,17 @@ export const App = () => {
           mediaPlaybackRequiresUserAction={false}
           mixedContentMode="always"
           onLoad={() => {
-            // The page reports "ready" itself; this covers a page that loaded
-            // but is too old to know about the shell.
+            // The page reports "ready" itself once its script runs.
             hideSplash();
           }}
           onError={({nativeEvent}: any) => {
             console.error('[thalco] load error', nativeEvent?.code, nativeEvent?.description);
-            if (phaseRef.current !== 'ready') {
-              setFailure(String(nativeEvent?.description ?? 'Network error'));
-              setPhase('failed');
-              hideSplash();
-            }
+            loadFailed(String(nativeEvent?.description ?? 'Network error'));
           }}
           onHttpError={({nativeEvent}: any) => {
             console.error('[thalco] http error', nativeEvent?.statusCode, nativeEvent?.url);
-            if (nativeEvent?.isMainFrame && phaseRef.current !== 'ready') {
-              setFailure('The server answered with error ' + nativeEvent?.statusCode + '.');
-              setPhase('failed');
-              hideSplash();
+            if (nativeEvent?.isMainFrame) {
+              loadFailed('The server answered with error ' + nativeEvent?.statusCode + '.');
             }
           }}
           onCloseWindow={() => BackHandler.exitApp()}

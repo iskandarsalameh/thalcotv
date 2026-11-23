@@ -170,7 +170,7 @@ export function sanitizeCueText(raw: string): string {
 
 function parseSrtOrVtt(text: string): Cue[] {
   const cues: Cue[] = [];
-  const blocks = text.replace(/\r/g, '').replace(/^﻿/, '').split(/\n{2,}/);
+  const blocks = text.replace(/\r/g, '').replace(/^\uFEFF/, '').split(/\n{2,}/);
   for (const block of blocks) {
     const lines = block.split('\n');
     const ti = lines.findIndex((l) => l.includes('-->'));

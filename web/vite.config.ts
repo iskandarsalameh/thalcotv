@@ -28,11 +28,25 @@ function versionFile(): Plugin {
   };
 }
 
-export default defineConfig({
+/**
+ * The copy packaged inside the .vpkg is opened from file://, where module
+ * scripts and CORS-mode links are refused, so it is built as one classic script.
+ */
+function classicScriptHtml(): Plugin {
+  return {
+    name: 'thalco-classic-script',
+    enforce: 'post',
+    transformIndexHtml(html) {
+      return html.replace(/<script type="module" crossorigin/g, '<script defer').replace(/ crossorigin(?=[ >])/g, '');
+    },
+  };
+}
+
+export default defineConfig(({ mode }) => ({
   // Relative base so the same build works from GitHub Pages (/thalcotv/),
   // from a custom domain, and from the bundle packaged inside the .vpkg.
   base: './',
-  plugins: [preact(), versionFile()],
+  plugins: mode === 'embedded' ? [preact(), versionFile(), classicScriptHtml()] : [preact(), versionFile()],
   define: {
     __APP_VERSION__: JSON.stringify(version),
     __APP_BUILD__: JSON.stringify(build),
@@ -44,9 +58,16 @@ export default defineConfig({
     target: ['chrome87'],
     cssTarget: ['chrome87'],
     sourcemap: false,
-    chunkSizeWarningLimit: 900,
+    chunkSizeWarningLimit: 1200,
+    ...(mode === 'embedded'
+      ? {
+          outDir: '../vega/assets/web',
+          emptyOutDir: true,
+          rollupOptions: { output: { format: 'iife' as const, inlineDynamicImports: true } },
+        }
+      : {}),
   },
   server: { host: true, port: 5173 },
   preview: { host: true, port: 4173 },
   test: { environment: 'node', include: ['tests/**/*.test.ts'] },
-});
+}));

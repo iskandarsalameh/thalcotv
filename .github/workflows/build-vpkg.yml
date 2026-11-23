@@ -8,6 +8,7 @@ on:
     branches: [main, 'claude/**']
     paths:
       - 'vega/**'
+      - 'web/package.json'
       - '.github/workflows/build-vpkg.yml'
   workflow_dispatch:
 
@@ -54,6 +55,14 @@ jobs:
         run: |
           sed -i "s/^build-number = .*/build-number = ${{ github.run_number }}/" manifest.toml
           grep -n 'build-number\|APP_URL' manifest.toml src/config.ts
+
+      # A copy of the interface ships inside the package as the offline fallback.
+      - name: Build the packaged copy of the interface
+        working-directory: web
+        run: |
+          npm ci
+          npm run build:embedded
+          ls -la ../vega/assets/web
 
       - name: Install dependencies
         working-directory: vega

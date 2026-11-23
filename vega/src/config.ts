@@ -7,5 +7,12 @@ export const APP_URL = 'https://iskandarsalameh.github.io/thalcotv/';
 
 export const SHELL_VERSION = '0.1.0';
 
-/** Seconds to wait for the interface before offering a retry. */
-export const LOAD_TIMEOUT_S = 25;
+/**
+ * Copy of the interface packaged inside the .vpkg at build time. Used when
+ * APP_URL cannot be reached (no hosting set up yet, or the server is down),
+ * so the app always starts. It only changes when the package is reinstalled.
+ */
+export const BUNDLED_URL = 'file:///pkg/assets/web/index.html';
+
+/** Seconds to wait for the interface before falling back. */
+export const LOAD_TIMEOUT_S = 15;
