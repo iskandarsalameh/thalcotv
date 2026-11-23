@@ -64,9 +64,12 @@ Only changes under `vega/` (the shell itself) need a new `.vpkg`.
   Continue Watching, watched marks (70% rule, as in Stremio), next episode
   lined up, Up Next countdown. Manual corrections live in the hold-Select menu.
 - **Trailers.** A Trailer button on title pages plays the official trailer
-  full screen with the remote (play/pause, skip, Back). Trailer ids come from
-  the title's metadata (Cinemeta), and play through YouTube's embedded player;
-  if one refuses to play embedded, the next one for that title is tried.
+  inside Thalco TV's own player: it opens on the title's artwork, fades into
+  the trailer, uses the same scrubber, buttons and Back pill as films, and
+  fades back to the title page just before the end. Trailer ids come from the
+  title's metadata (Cinemeta). The picture is YouTube's embedded player with
+  all of its own interface kept off screen; if a trailer refuses to play
+  embedded, the next one for that title is tried.
 - **Library** with sort (recently watched, added, title, year, most watched)
   and filters (in progress, watched, not watched, by type).
 - **Languages.** Interface in English, Arabic (right to left), Spanish, French,

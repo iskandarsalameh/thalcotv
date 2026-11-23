@@ -22,7 +22,7 @@ export type Route =
       startAt?: number;
     }
   | { name: 'catalog'; ref: CatalogRef; title: string; genre?: string }
-  | { name: 'trailer'; title: string; ids: string[] }
+  | { name: 'trailer'; title: string; ids: string[]; art?: string; logo?: string }
   | { name: 'addons' }
   | { name: 'pair'; configureUrl?: string }
   | { name: 'addon'; transportUrl: string };

@@ -51,7 +51,7 @@ function StackScreen({ entry, active }: { entry: StackEntry; active: boolean }) 
     case 'player':
       return <PlayerScreen active={active} meta={r.meta} video={r.video} streams={r.streams} index={r.index} startAt={r.startAt} />;
     case 'trailer':
-      return <TrailerScreen active={active} title={r.title} ids={r.ids} />;
+      return <TrailerScreen active={active} title={r.title} ids={r.ids} art={r.art} logo={r.logo} />;
     case 'catalog':
       return <BrowseScreen active={active} type={r.ref.catalog.type} initial={{ ref: r.ref, genre: r.genre }} title={r.title} />;
     case 'addons':

@@ -230,7 +230,7 @@ export function DetailsScreen({ active, type, id, preview }: Props) {
               </Focusable>
             )}
             {trailers.length > 0 && (
-              <Focusable class="btn" onSelect={() => push({ name: 'trailer', title: shown.name, ids: trailers })}>
+              <Focusable class="btn" onSelect={() => push({ name: 'trailer', title: shown.name, ids: trailers, art: shown.background || shown.poster, logo: shown.logo })}>
                 <Icon name="trailer" /> {t('details.trailer')}
               </Focusable>
             )}

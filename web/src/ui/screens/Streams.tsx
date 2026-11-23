@@ -153,7 +153,7 @@ export function StreamsScreen({ active, meta, video, auto, startAt }: Props) {
             isDefault={i === 0}
             onSelect={() => {
               if (s.playable) start(streams, i);
-              else if (s.kind === 'youtube' && s.stream.ytId) push({ name: 'trailer', title: meta.name, ids: [s.stream.ytId] });
+              else if (s.kind === 'youtube' && s.stream.ytId) push({ name: 'trailer', title: meta.name, ids: [s.stream.ytId], art: meta.background || meta.poster, logo: meta.logo });
             }}
           >
             <div class="stream-main">
