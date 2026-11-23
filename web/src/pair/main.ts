@@ -2,7 +2,23 @@
 // add-on link, encrypts it with the key from the QR code and hands it to the
 // relay for the TV to pick up.
 
+import './pair.css';
 import { listen, parseFragment, send } from '../core/pairing';
+import pasteSvg from '@phosphor-icons/core/assets/bold/clipboard-text-bold.svg?raw';
+import tvSvg from '@phosphor-icons/core/assets/bold/television-simple-bold.svg?raw';
+import openSvg from '@phosphor-icons/core/assets/bold/arrow-square-out-bold.svg?raw';
+import okSvg from '@phosphor-icons/core/assets/fill/check-circle-fill.svg?raw';
+import warnSvg from '@phosphor-icons/core/assets/fill/warning-fill.svg?raw';
+
+/** Same Phosphor icons as the TV interface, sized and coloured by CSS. */
+function icon(svg: string): string {
+  return svg.replace('<svg ', '<svg class="icon" aria-hidden="true" ');
+}
+
+function label(el: HTMLElement, svg: string, text: string): void {
+  el.innerHTML = icon(svg);
+  el.appendChild(document.createTextNode(text));
+}
 
 type Strings = Record<
   | 'title' | 'intro' | 'noCode' | 'configureStep' | 'configureText' | 'configureOpen' | 'pasteStep' | 'pasteStepOnly'
@@ -15,10 +31,10 @@ const STRINGS: Record<string, Strings> = {
     title: 'Add to Thalco TV',
     intro: 'Paste the link of an add-on and it will appear on your TV.',
     noCode: 'Open this page by scanning the code shown on your TV: Settings, Add-ons, Add from Phone.',
-    configureStep: 'Step 1',
+    configureStep: 'Set up the add-on',
     configureText: 'Set the add-on up, then copy its install link. Tip: press and hold the Install button and choose Copy Link.',
     configureOpen: 'Open Setup Page',
-    pasteStep: 'Step 2: paste the link',
+    pasteStep: 'Paste the install link',
     pasteStepOnly: 'Add-on link',
     paste: 'Paste',
     send: 'Send to TV',
@@ -35,10 +51,10 @@ const STRINGS: Record<string, Strings> = {
     title: 'أضف إلى Thalco TV',
     intro: 'الصق رابط الإضافة وسيظهر على تلفازك.',
     noCode: 'افتح هذه الصفحة بمسح الرمز الظاهر على التلفاز: الإعدادات، الإضافات، إضافة من الهاتف.',
-    configureStep: 'الخطوة 1',
+    configureStep: 'أعدّ الإضافة',
     configureText: 'أعدّ الإضافة ثم انسخ رابط التثبيت. تلميح: اضغط مطوّلًا على زر Install واختر نسخ الرابط.',
     configureOpen: 'فتح صفحة الإعداد',
-    pasteStep: 'الخطوة 2: الصق الرابط',
+    pasteStep: 'الصق رابط التثبيت',
     pasteStepOnly: 'رابط الإضافة',
     paste: 'لصق',
     send: 'إرسال إلى التلفاز',
@@ -55,10 +71,10 @@ const STRINGS: Record<string, Strings> = {
     title: 'Añadir a Thalco TV',
     intro: 'Pega el enlace de un complemento y aparecerá en tu televisor.',
     noCode: 'Abre esta página escaneando el código que muestra tu televisor: Ajustes, Complementos, Añadir desde el teléfono.',
-    configureStep: 'Paso 1',
+    configureStep: 'Configura el complemento',
     configureText: 'Configura el complemento y copia su enlace de instalación. Consejo: mantén pulsado el botón Install y elige Copiar enlace.',
     configureOpen: 'Abrir configuración',
-    pasteStep: 'Paso 2: pega el enlace',
+    pasteStep: 'Pega el enlace de instalación',
     pasteStepOnly: 'Enlace del complemento',
     paste: 'Pegar',
     send: 'Enviar al televisor',
@@ -75,10 +91,10 @@ const STRINGS: Record<string, Strings> = {
     title: 'Ajouter à Thalco TV',
     intro: 'Collez le lien d’une extension et elle apparaîtra sur votre téléviseur.',
     noCode: 'Ouvrez cette page en scannant le code affiché sur le téléviseur : Réglages, Extensions, Ajouter depuis le téléphone.',
-    configureStep: 'Étape 1',
+    configureStep: 'Configurez l’extension',
     configureText: 'Configurez l’extension puis copiez son lien d’installation. Astuce : appui long sur le bouton Install, puis Copier le lien.',
     configureOpen: 'Ouvrir la configuration',
-    pasteStep: 'Étape 2 : collez le lien',
+    pasteStep: 'Collez le lien d’installation',
     pasteStepOnly: 'Lien de l’extension',
     paste: 'Coller',
     send: 'Envoyer au téléviseur',
@@ -95,10 +111,10 @@ const STRINGS: Record<string, Strings> = {
     title: 'Zu Thalco TV hinzufügen',
     intro: 'Link eines Add-ons einfügen, dann erscheint es auf dem Fernseher.',
     noCode: 'Diese Seite über den Code auf dem Fernseher öffnen: Einstellungen, Add-ons, Vom Handy hinzufügen.',
-    configureStep: 'Schritt 1',
+    configureStep: 'Add-on einrichten',
     configureText: 'Add-on einrichten und den Installationslink kopieren. Tipp: Install gedrückt halten und Link kopieren wählen.',
     configureOpen: 'Einrichtung öffnen',
-    pasteStep: 'Schritt 2: Link einfügen',
+    pasteStep: 'Installationslink einfügen',
     pasteStepOnly: 'Add-on-Link',
     paste: 'Einfügen',
     send: 'An Fernseher senden',
@@ -115,10 +131,10 @@ const STRINGS: Record<string, Strings> = {
     title: 'Adicionar ao Thalco TV',
     intro: 'Cole o link de um complemento e ele aparecerá na sua TV.',
     noCode: 'Abra esta página lendo o código mostrado na TV: Ajustes, Complementos, Adicionar pelo celular.',
-    configureStep: 'Passo 1',
+    configureStep: 'Configure o complemento',
     configureText: 'Configure o complemento e copie o link de instalação. Dica: segure o botão Install e escolha Copiar link.',
     configureOpen: 'Abrir configuração',
-    pasteStep: 'Passo 2: cole o link',
+    pasteStep: 'Cole o link de instalação',
     pasteStepOnly: 'Link do complemento',
     paste: 'Colar',
     send: 'Enviar para a TV',
@@ -168,8 +184,9 @@ function start(): void {
   setText('note', S.note);
   $('form').hidden = false;
   setText('pasteStep', configureUrl ? S.pasteStep : S.pasteStepOnly);
-  setText('paste', S.paste);
-  setText('send', S.send);
+  setText('pasteNum', configureUrl ? '2' : '1');
+  label($('paste'), pasteSvg, S.paste);
+  label($('send'), tvSvg, S.send);
 
   if (configureUrl) {
     $('configure').hidden = false;
@@ -177,16 +194,17 @@ function start(): void {
     setText('configureText', S.configureText);
     const link = $<HTMLAnchorElement>('configureLink');
     link.href = configureUrl;
-    link.textContent = S.configureOpen;
+    label(link, openSvg, S.configureOpen);
   }
 
   const field = $<HTMLTextAreaElement>('url');
   const sendButton = $<HTMLButtonElement>('send');
   const pasteButton = $<HTMLButtonElement>('paste');
   const status = $('status');
-  const say = (text: string, cls = '') => {
-    status.textContent = text;
-    status.className = 'status ' + cls;
+  const say = (text: string, kind: '' | 'ok' | 'bad' | 'busy' = '') => {
+    status.className = 'toast' + (kind ? ' toast-' + kind : '');
+    status.innerHTML = kind === 'ok' ? icon(okSvg) : kind === 'bad' ? icon(warnSvg) : kind === 'busy' ? '<span class="spinner"></span>' : '';
+    status.appendChild(document.createTextNode(text));
   };
 
   if (!navigator.clipboard?.readText) pasteButton.hidden = true;
@@ -216,10 +234,10 @@ function start(): void {
       return;
     }
     sendButton.disabled = true;
-    say(S.sending);
+    say(S.sending, 'busy');
     try {
       await send(channel, { t: 'add', url });
-      say(S.sent);
+      say(S.sent, 'busy');
       setTimeout(() => {
         sendButton.disabled = false;
       }, 4000);

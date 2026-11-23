@@ -1,0 +1,243 @@
+@import '../theme.css';
+
+/*
+ * Phone pairing page. Same typefaces, colours and control shapes as the TV
+ * interface, sized for a hand-held screen: surfaces are the TV's sheets,
+ * buttons are the TV's buttons (the primary one wears the TV's focused look),
+ * the field is the TV's text field.
+ */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: #000;
+  color: var(--text);
+}
+
+body {
+  min-height: 100vh;
+  padding: 1.75rem 1.25rem 2.5rem;
+  font-family: 'Inter Variable', 'IBM Plex Sans Arabic', -apple-system, 'Helvetica Neue', Roboto, 'Noto Sans', Arial, sans-serif;
+  font-size: 1rem;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: transparent;
+}
+
+main {
+  max-width: 32.5rem;
+  margin: 0 auto;
+}
+
+.icon {
+  width: 1.25em;
+  height: 1.25em;
+  flex: none;
+}
+
+.brand {
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.brand span {
+  font-weight: 300;
+  opacity: 0.7;
+  margin-inline-start: 0.12em;
+}
+
+.page-title {
+  margin: 1.75rem 0 0.5rem;
+  font-size: 2.1rem;
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.intro {
+  margin: 0 0 1.5rem;
+  font-size: 1.05rem;
+  line-height: 1.42;
+  color: var(--text-2);
+}
+
+.sheet {
+  margin-bottom: 0.9rem;
+  padding: 1.25rem;
+  border-radius: 1.5rem;
+  background: rgba(40, 40, 42, 0.985);
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.9rem;
+}
+
+.pair-num {
+  flex: none;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  background: var(--fill-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.section-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.sheet-message {
+  margin: 0 0 1rem;
+  font-size: 0.98rem;
+  line-height: 1.42;
+  color: var(--text-2);
+}
+
+.input-field {
+  display: block;
+  width: 100%;
+  min-height: 6.5rem;
+  padding: 0.9rem 1rem;
+  border: 0;
+  border-radius: 0.9rem;
+  background: rgba(118, 118, 128, 0.28);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.4;
+  word-break: break-all;
+  resize: vertical;
+  outline: none;
+  transition: box-shadow 0.2s linear;
+}
+
+.input-field::placeholder {
+  color: var(--text-3);
+}
+
+.input-field:focus {
+  box-shadow: 0 0 0 0.14rem rgba(255, 255, 255, 0.95);
+}
+
+.button-row {
+  display: flex;
+  gap: 0.7rem;
+  margin-top: 0.9rem;
+}
+
+.btn {
+  flex: 1;
+  min-height: 3.4rem;
+  padding: 0 1.1rem;
+  border: 0;
+  border-radius: 0.95rem;
+  background: var(--fill-2);
+  color: #fff;
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform 0.2s var(--ease),
+    opacity 0.2s linear;
+}
+
+/* The main action carries the TV's focused appearance: white fill, dark text. */
+.btn-primary {
+  background: #fff;
+  color: #000;
+  box-shadow: 0 0.6rem 1.4rem rgba(0, 0, 0, 0.45);
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  opacity: 0.38;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+  padding: 0.8rem 1.1rem;
+  border-radius: 1.2rem;
+  background: rgba(58, 58, 60, 0.97);
+  font-size: 0.98rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.toast:empty {
+  display: none;
+}
+
+.toast-ok .icon {
+  color: var(--green);
+}
+
+.toast-bad .icon {
+  color: var(--red);
+}
+
+.spinner {
+  flex: none;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 50%;
+  border: 0.17rem solid rgba(255, 255, 255, 0.18);
+  border-top-color: #fff;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.note {
+  margin-top: 1.25rem;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--text-3);
+}
+
+[hidden] {
+  display: none !important;
+}
+
+[lang='ar'] body {
+  line-height: 1.5;
+}
+
+[lang='ar'] .page-title,
+[lang='ar'] .brand,
+[lang='ar'] .section-label {
+  letter-spacing: 0;
+}
