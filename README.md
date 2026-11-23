@@ -44,7 +44,7 @@ Only changes under `vega/` (the shell itself) need a new `.vpkg`.
 - **Library** with sort (recently watched, added, title, year, most watched)
   and filters (in progress, watched, not watched, by type).
 - **Languages.** Interface in English, Arabic (right to left), Spanish, French,
-  German, Italian, Portuguese, Turkish and Russian. Preferred audio and
+  German and Portuguese. Preferred audio and
   subtitle languages, audio track switching, subtitles from add-ons and from
   the stream, legacy text encodings (Arabic, Cyrillic, Greek and more) decoded
   correctly, adjustable size, colour, style, position and timing offset.
@@ -107,6 +107,12 @@ The result is `vega/build/armv7-release/thalcotv_armv7.vpkg`.
 - YouTube and "open in browser" sources are listed but cannot be played.
 - Configurable add-ons are set up in a browser on a phone or computer; the
   resulting install link is then entered with Add by URL.
+- In the native player (used for Matroska and Dolby audio files) subtitles
+  follow your preferred subtitle language and can be toggled, but there is no
+  audio-track or speed menu yet.
+- The shell and native player were built against Amazon's SDK in CI but could
+  not be run on hardware from here: the first launch on a real stick is the
+  first real test of that layer.
 
 ## Credits
 

@@ -60,7 +60,10 @@ function modesFor(s: RankedStream): Mode[] {
   const native = nativeBridge.nativePlayer;
   const server = !!serverUrl();
   const modes: Mode[] = [];
-  if (s.needsHelp) {
+  // Matroska and Dolby/DTS audio are the platform player's home turf; do not
+  // make the viewer wait for the WebView to fail (or play without sound) first.
+  const nativeFirst = native && (s.container === 'mkv' || s.container === 'avi' || ['DD', 'DD+', 'Atmos', 'DTS', 'TrueHD'].includes(s.audio));
+  if (s.needsHelp || nativeFirst) {
     if (native) modes.push('native');
     if (server) modes.push('transcode');
     modes.push('direct');
@@ -118,6 +121,8 @@ export function PlayerScreen({ active, meta, video, streams, index, startAt }: P
     nativeTime: 0,
     nativeDuration: 0,
     exited: false,
+    audioChecked: false,
+    playingSince: 0,
     subToken: 0,
     autoSubDone: false,
     userChoseSub: false,
@@ -204,6 +209,8 @@ export function PlayerScreen({ active, meta, video, streams, index, startAt }: P
     S.candidate = i;
     S.mode = mode;
     S.stallSince = 0;
+    S.audioChecked = false;
+    S.playingSince = 0;
     setCandidate(i);
     setPhaseBoth('loading');
     setErrorText('');
@@ -535,6 +542,25 @@ export function PlayerScreen({ active, meta, video, streams, index, startAt }: P
         }
       }
       if (S.phase === 'playing' && now - S.lastReport > 5000) report(false);
+      // Chromium plays a file whose audio codec it lacks as silent video. Catch
+      // that and move to a decoder that has sound.
+      if (S.phase === 'playing' && !S.audioChecked) {
+        if (!S.playingSince) S.playingSince = now;
+        else if (now - S.playingSince > 5000) {
+          S.audioChecked = true;
+          const counters = v as unknown as { webkitAudioDecodedByteCount?: number; webkitVideoDecodedByteCount?: number };
+          if (counters.webkitAudioDecodedByteCount === 0 && (counters.webkitVideoDecodedByteCount ?? 0) > 0 && !v.muted) {
+            const modes = modesFor(streams[S.candidate]);
+            const nextMode = modes[modes.indexOf(S.mode) + 1];
+            if (nextMode) {
+              showToast(t('player.noAudio'), 'audio');
+              void attempt(S.candidate, nextMode, cur);
+            } else {
+              showToast(t('player.noAudioHint'), 'warn', 6000);
+            }
+          }
+        }
+      }
       if (S.phase === 'buffering' && S.stallSince && now - S.stallSince > STALL_LIMIT_MS && settings.value.autoFailover) {
         S.stallSince = 0;
         if (!S.retriedSame) {

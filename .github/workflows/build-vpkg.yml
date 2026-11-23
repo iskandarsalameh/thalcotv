@@ -1,6 +1,6 @@
 # Builds the Vega OS package (.vpkg) for Fire TV Stick 4K Select.
-# The package is only the shell around the interface, so it changes rarely:
-# it is rebuilt when vega/ changes or when started by hand.
+# The package is the shell plus a fallback copy of the interface, so it is
+# rebuilt on every change; the stick only needs it reinstalled when vega/ changes.
 name: Build vpkg
 
 on:
@@ -8,7 +8,7 @@ on:
     branches: [main, 'claude/**']
     paths:
       - 'vega/**'
-      - 'web/package.json'
+      - 'web/**'
       - '.github/workflows/build-vpkg.yml'
   workflow_dispatch:
 

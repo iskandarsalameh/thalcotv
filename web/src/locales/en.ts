@@ -155,6 +155,8 @@ const en: Record<string, string> = {
   'player.subtitleBigger': 'Text Size',
   'player.audio': 'Audio',
   'player.oneAudio': 'This source has a single audio track',
+  'player.noAudio': 'No sound in this format. Switching player…',
+  'player.noAudioHint': 'This source has no sound this device can decode. Try another source.',
   'player.speed': 'Speed',
   'player.speedNormal': 'Normal',
   'player.sources': 'Sources',

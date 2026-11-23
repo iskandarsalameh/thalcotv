@@ -15,10 +15,7 @@ export const LOCALES: LocaleInfo[] = [
   { code: 'es', name: 'Español', load: () => import('../locales/es') },
   { code: 'fr', name: 'Français', load: () => import('../locales/fr') },
   { code: 'de', name: 'Deutsch', load: () => import('../locales/de') },
-  { code: 'it', name: 'Italiano', load: () => import('../locales/it') },
   { code: 'pt', name: 'Português', load: () => import('../locales/pt') },
-  { code: 'tr', name: 'Türkçe', load: () => import('../locales/tr') },
-  { code: 'ru', name: 'Русский', load: () => import('../locales/ru') },
 ];
 
 export const locale = signal('en');

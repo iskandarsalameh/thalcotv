@@ -15,6 +15,7 @@ import { Focusable } from '../components/Focusable';
 import { Icon } from '../components/Icon';
 import { alert, confirm, openMenu, promptText, showToast, type MenuOption } from '../overlay';
 import { ensureFocus } from '../../nav/spatial';
+import { chromeHidden } from '../state';
 
 function Item({ label, value, hint, onSelect, isDefault }: { label: string; value?: string; hint?: string; onSelect: () => void; isDefault?: boolean }) {
   return (
@@ -153,7 +154,7 @@ export function SettingsScreen({ active }: { active: boolean }) {
 
   return (
     <div class="screen screen-settings" data-focus-group="" ref={rootRef}>
-      <Scroller inset={12}>
+      <Scroller inset={12} onScrolled={(v) => (chromeHidden.value = v)}>
         <header class="page-header page-header-flow" data-anchor="top">
           <h1 class="page-title">{t('tab.settings')}</h1>
         </header>

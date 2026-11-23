@@ -511,6 +511,10 @@ img + .hero-title-backup {
   align-items: flex-start;
   padding-inline-start: var(--safe-x);
   transition: transform 0.3s var(--ease);
+}
+
+/* Only the row in use gets its own compositor layer; the stick has little GPU memory. */
+.row:focus-within .row-track {
   will-change: transform;
 }
 
@@ -1869,4 +1873,26 @@ img + .hero-title-backup {
 
 .top-fade-on {
   opacity: 1;
+}
+
+/* Titles and synopses keep their own reading direction inside a right-to-left interface. */
+.card-title,
+.card-subtitle,
+.hero-desc,
+.details-desc,
+.credits-desc,
+.stream-detail,
+.player-title,
+.player-subtitle,
+.addon-desc {
+  unicode-bidi: plaintext;
+}
+
+[dir='rtl'] .card-title,
+[dir='rtl'] .card-subtitle,
+[dir='rtl'] .hero-desc,
+[dir='rtl'] .details-desc,
+[dir='rtl'] .credits-desc,
+[dir='rtl'] .addon-desc {
+  text-align: right;
 }
