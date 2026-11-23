@@ -1,0 +1,7 @@
+node_modules/
+dist/
+build/
+*.vpkg
+.DS_Store
+*.log
+buildinfo.json
