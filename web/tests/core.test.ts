@@ -265,3 +265,18 @@ describe('library and watch tracking', () => {
     expect(libraryList().map((i) => i.id)).toEqual(['a']);
   });
 });
+
+describe('phone pairing', () => {
+  it('round-trips an encrypted message and rejects other keys', async () => {
+    const { newChannel, seal, open, channelFragment, parseFragment } = await import('../src/core/pairing');
+    const ch = newChannel();
+    const sealed = await seal(ch, { t: 'add', url: 'https://example.com/abc/manifest.json' });
+    expect(sealed).not.toContain('example');
+    expect(await open(ch, sealed)).toEqual({ t: 'add', url: 'https://example.com/abc/manifest.json' });
+    expect(await open(newChannel(), sealed)).toBeNull();
+    expect(await open(ch, 'not-a-message')).toBeNull();
+    const parsed = parseFragment(channelFragment(ch, 'https://addon.example/configure'));
+    expect(parsed).toEqual({ channel: ch, configureUrl: 'https://addon.example/configure' });
+    expect(parseFragment('#t=evil&k=short')).toBeNull();
+  });
+});

@@ -65,7 +65,10 @@ export default defineConfig(({ mode }) => ({
           emptyOutDir: true,
           rollupOptions: { output: { format: 'iife' as const, inlineDynamicImports: true } },
         }
-      : {}),
+      : {
+          // The phone pairing page is published next to the TV interface.
+          rollupOptions: { input: { main: 'index.html', pair: 'pair.html' } },
+        }),
   },
   server: { host: true, port: 5173 },
   preview: { host: true, port: 4173 },

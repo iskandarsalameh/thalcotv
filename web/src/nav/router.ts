@@ -23,6 +23,7 @@ export type Route =
     }
   | { name: 'catalog'; ref: CatalogRef; title: string; genre?: string }
   | { name: 'addons' }
+  | { name: 'pair'; configureUrl?: string }
   | { name: 'addon'; transportUrl: string };
 
 export interface StackEntry {

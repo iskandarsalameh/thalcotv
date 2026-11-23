@@ -29,6 +29,7 @@ import puzzleSvg from '@phosphor-icons/core/assets/bold/puzzle-piece-bold.svg?ra
 import gearSvg from '@phosphor-icons/core/assets/bold/gear-bold.svg?raw';
 import micSvg from '@phosphor-icons/core/assets/fill/microphone-fill.svg?raw';
 import keyboardSvg from '@phosphor-icons/core/assets/bold/keyboard-bold.svg?raw';
+import qrSvg from '@phosphor-icons/core/assets/bold/qr-code-bold.svg?raw';
 
 const SOURCES: Record<string, string> = {
   play: playSvg,
@@ -59,6 +60,7 @@ const SOURCES: Record<string, string> = {
   gear: gearSvg,
   mic: micSvg,
   keyboard: keyboardSvg,
+  qr: qrSvg,
 };
 
 /** Path data only: the wrapper <svg> is ours so the icon inherits size and colour. */

@@ -172,8 +172,11 @@ export function AddonsScreen({ active }: { active: boolean }) {
               {typeFilter === 'all' ? t('library.allTypes') : typeLabel(typeFilter)} <Icon name="chevronDown" />
             </Focusable>
           )}
+          <Focusable class="chip chip-accent" onSelect={() => push({ name: 'pair' })}>
+            <Icon name="qr" /> {t('addons.addFromPhone')}
+          </Focusable>
           <Focusable class="chip" onSelect={() => void addByUrl()}>
-            <Icon name="plus" /> {t('addons.addByUrl')}
+            <Icon name="keyboard" /> {t('addons.addByUrl')}
           </Focusable>
         </div>
       </header>
@@ -240,7 +243,7 @@ export function AddonScreen({ active, transportUrl }: { active: boolean; transpo
 
   const install = async () => {
     if (m.behaviorHints?.configurationRequired) {
-      await alert(t('addons.configure.title'), t('addons.configure.message', { url: baseUrlOf(addon) + '/configure' }), t('common.ok'));
+      push({ name: 'pair', configureUrl: baseUrlOf(addon) + '/configure' });
       return;
     }
     setBusy(true);
@@ -299,10 +302,7 @@ export function AddonScreen({ active, transportUrl }: { active: boolean; transpo
                 </Focusable>
               )}
               {configurable && (
-                <Focusable
-                  class="btn"
-                  onSelect={() => void alert(t('addons.configure.title'), t('addons.configure.message', { url: baseUrlOf(addon) + '/configure' }), t('common.ok'))}
-                >
+                <Focusable class="btn" onSelect={() => push({ name: 'pair', configureUrl: baseUrlOf(addon) + '/configure' })}>
                   <Icon name="gear" /> {t('addons.configure')}
                 </Focusable>
               )}

@@ -20,6 +20,7 @@ endorsed by Stremio or Smart Code OOD.
 
 - Preact and @preact/signals (MIT)
 - Phosphor Icons (MIT), https://phosphoricons.com
+- qrcode-generator (MIT)
 - Inter typeface (SIL Open Font License 1.1)
 - IBM Plex Sans Arabic typeface (SIL Open Font License 1.1)
 - hls.js (Apache-2.0)
@@ -30,3 +31,9 @@ endorsed by Stremio or Smart Code OOD.
 On first start two add-ons are installed, both operated by their own
 providers: Cinemeta (catalogs and metadata) and OpenSubtitles v3 (subtitles).
 Neither provides streams.
+
+## Third-party service
+
+Adding an add-on from a phone passes one small encrypted message through the
+public relay at https://ntfy.sh. The encryption key never leaves the phone and
+the TV, and nothing is sent unless the pairing screen is used.

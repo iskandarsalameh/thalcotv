@@ -49,6 +49,8 @@ function bootstrapScript(store: Record<string, string>, bundled: boolean): strin
     shellVersion: SHELL_VERSION,
     platform: 'firetv',
     nativePlayer: true,
+    // The phone pairing page lives next to the hosted interface.
+    appUrl: APP_URL,
     // True when running the copy inside the package instead of the hosted one.
     bundled,
     store,

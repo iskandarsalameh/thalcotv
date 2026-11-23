@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="robots" content="noindex" />
+    <title>Thalco TV</title>
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <style>
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; background: #000; color: #fff; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+        padding: 28px 20px 40px;
+      }
+      main { max-width: 520px; margin: 0 auto; }
+      .brand { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; color: #8e8e93; }
+      .brand span { font-weight: 300; margin-inline-start: 2px; }
+      h1 { font-size: 30px; line-height: 1.15; letter-spacing: -0.02em; margin: 22px 0 8px; }
+      p { font-size: 16px; line-height: 1.45; color: rgba(235, 235, 245, 0.7); margin: 0 0 18px; }
+      .card { background: #1c1c1e; border-radius: 18px; padding: 18px; margin-bottom: 14px; }
+      .step { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(235, 235, 245, 0.5); margin-bottom: 10px; }
+      textarea {
+        width: 100%; min-height: 108px; resize: vertical; border: 0; border-radius: 12px; padding: 14px;
+        background: #2c2c2e; color: #fff; font: 16px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; word-break: break-all;
+      }
+      textarea:focus { outline: 2px solid #fff; }
+      .row { display: flex; gap: 10px; margin-top: 12px; }
+      button, a.button {
+        flex: 1; display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 18px;
+        border: 0; border-radius: 14px; font: 600 17px/1 inherit; text-decoration: none; cursor: pointer;
+        background: #3a3a3c; color: #fff; -webkit-tap-highlight-color: transparent;
+      }
+      button.primary { background: #fff; color: #000; }
+      button:disabled { opacity: 0.4; }
+      .status { min-height: 24px; margin-top: 14px; font-size: 16px; font-weight: 600; }
+      .ok { color: #30d158; }
+      .bad { color: #ff453a; }
+      .note { font-size: 13px; color: rgba(235, 235, 245, 0.4); margin-top: 18px; }
+      [hidden] { display: none !important; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="brand">thalco<span>tv</span></div>
+      <h1 id="title"></h1>
+      <p id="intro"></p>
+
+      <div class="card" id="configure" hidden>
+        <div class="step" id="configureStep"></div>
+        <p id="configureText"></p>
+        <div class="row"><a class="button" id="configureLink" target="_blank" rel="noopener"></a></div>
+      </div>
+
+      <div class="card" id="form" hidden>
+        <div class="step" id="pasteStep"></div>
+        <textarea id="url" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" dir="ltr" placeholder="https://…/manifest.json"></textarea>
+        <div class="row">
+          <button id="paste" type="button"></button>
+          <button id="send" type="button" class="primary"></button>
+        </div>
+        <div class="status" id="status" role="status"></div>
+      </div>
+
+      <div class="note" id="note"></div>
+    </main>
+    <script type="module" src="/src/pair/main.ts"></script>
+  </body>
+</html>

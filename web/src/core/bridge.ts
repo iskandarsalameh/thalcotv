@@ -27,6 +27,10 @@ interface ShellInfo {
   /** The shell has a native video player for formats the WebView cannot decode. */
   nativePlayer?: boolean;
   shell?: string;
+  /** Where the published interface lives (known to the shell even when it runs the packaged copy). */
+  appUrl?: string;
+  /** Running the copy inside the package rather than the hosted interface. */
+  bundled?: boolean;
   shellVersion?: string;
   platform?: string;
   store?: Record<string, string>;

@@ -33,6 +33,10 @@ Only changes under `vega/` (the shell itself) need a new `.vpkg`.
   gets out of the way when you scroll.
 - **Add-ons** like Stremio, under Settings: browse the community catalog,
   install by URL, reorder by priority, uninstall.
+- **Add from your phone.** The TV shows a QR code; scan it, paste an add-on
+  link on the page that opens, confirm on the TV. Add-ons that need setting up
+  send the phone to their setup page first. The link is encrypted on the phone
+  and decrypted on the TV, so the relay in between never sees it.
 - **Keyboard with Dictate.** A tidy grid for the remote, plus a Dictate key
   that hands over to voice input (the system keyboard listens while the
   remote's microphone button is held).
@@ -107,8 +111,9 @@ The result is `vega/build/armv7-release/thalcotv_armv7.vpkg`.
 - Torrent sources need a streaming server on your network (Settings >
   Streaming Server); the stick cannot run one itself.
 - YouTube and "open in browser" sources are listed but cannot be played.
-- Configurable add-ons are set up in a browser on a phone or computer; the
-  resulting install link is then entered with Add by URL.
+- Adding from a phone needs the interface to be published (the phone page is
+  part of it) and uses the public relay ntfy.sh to carry the encrypted link.
+  If either is unavailable, Add by URL still works.
 - In the native player (used for Matroska and Dolby audio files) subtitles
   follow your preferred subtitle language and can be toggled, but there is no
   audio-track or speed menu yet.

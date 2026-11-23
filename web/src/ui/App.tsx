@@ -16,6 +16,7 @@ import { LibraryScreen } from './screens/Library';
 import { SearchScreen } from './screens/Search';
 import { AddonsScreen, AddonScreen } from './screens/Addons';
 import { SettingsScreen } from './screens/Settings';
+import { PairScreen } from './screens/Pair';
 import { DetailsScreen } from './screens/Details';
 import { StreamsScreen } from './screens/Streams';
 import { PlayerScreen } from '../player/PlayerScreen';
@@ -52,6 +53,8 @@ function StackScreen({ entry, active }: { entry: StackEntry; active: boolean }) 
       return <BrowseScreen active={active} type={r.ref.catalog.type} initial={{ ref: r.ref, genre: r.genre }} title={r.title} />;
     case 'addons':
       return <AddonsScreen active={active} />;
+    case 'pair':
+      return <PairScreen active={active} configureUrl={r.configureUrl} />;
     case 'addon':
       return <AddonScreen active={active} transportUrl={r.transportUrl} />;
   }
