@@ -157,14 +157,22 @@ export function App() {
         pop();
         return true;
       }
-      // First Back opens the sidebar, the next returns to Home, the last offers to leave.
-      if (!sidebarOpen.value) {
+      // On Home, Back first returns to the bar at the top, then offers to leave.
+      // Elsewhere it opens the sidebar, and the next Back returns to Home.
+      const homeItem = () => document.querySelector<HTMLElement>('#tabbar .topbar [data-tab="home"]');
+      if (tab.value === 'home' && !sidebarOpen.value) {
+        const bar = document.querySelector('#tabbar .topbar');
+        if (bar && !bar.contains(document.activeElement)) {
+          focusEl(homeItem());
+          return true;
+        }
+      } else if (!sidebarOpen.value) {
         sidebarOpen.value = true;
         return true;
-      }
-      if (tab.value !== 'home') {
+      } else {
+        sidebarOpen.value = false;
         switchTab('home');
-        focusEl(document.querySelector<HTMLElement>('#tabbar .sidebar-panel [data-tab="home"]'));
+        setTimeout(() => focusEl(homeItem()), 0);
         return true;
       }
       if (overlays.value.length === 0) {

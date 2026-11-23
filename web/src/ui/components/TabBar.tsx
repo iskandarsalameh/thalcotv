@@ -33,7 +33,11 @@ export function TabBar() {
   const topRoute = stacked ? stack.value[depth - 1].route.name : '';
   const playerOnTop = topRoute === 'player' || topRoute === 'trailer';
   const open = sidebarOpen.value && !stacked;
+  // Home wears the sections as a bar across the top centre; everywhere else they
+  // fold into the corner pill, which opens the sidebar.
+  const home = current === 'home' && !stacked && !open;
   const hidden = playerOnTop || (!stacked && chromeHidden.value && !open);
+  const barRef = useRef<HTMLDivElement>(null);
   const pillRef = useRef<HTMLDivElement | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -68,7 +72,10 @@ export function TabBar() {
       if (sidebarOpen.value || overlays.value.length || dir !== (isRtl() ? 'right' : 'left')) return;
       const target = e.target as HTMLElement;
       // On a section the edge opens the sidebar; deeper in, it lands on the Back pill.
-      if (!stack.value.length && target.closest('.layer-root')) sidebarOpen.value = true;
+      if (!stack.value.length && target.closest('.layer-root')) {
+        if (tab.value === 'home') focusEl(barRef.current?.querySelector<HTMLElement>('[data-tab="home"]'));
+        else sidebarOpen.value = true;
+      }
       else if (stack.value.length && target.closest('.layer-top') && !target.closest('.screen-player')) focusEl(pillRef.current);
     };
     document.addEventListener('focusedge', onEdge);
@@ -126,12 +133,37 @@ export function TabBar() {
     </Focusable>
   );
 
+  const barItem = (x: { id: TabId; icon: string }, iconOnly: boolean) => (
+    <Focusable
+      key={x.id}
+      class={'top-item' + (iconOnly ? ' top-item-icon' : '') + (x.id === current ? ' top-item-on' : '')}
+      isDefault={x.id === current}
+      data-tab={x.id}
+      label={t('tab.' + x.id)}
+      role="tab"
+      onSelect={() => {
+        if (x.id !== current) switchTab(x.id);
+        setTimeout(() => focusFirst(document.querySelector('.layer-top .screen')), 0);
+      }}
+    >
+      {iconOnly ? <Icon name={x.icon} /> : <span>{t('tab.' + x.id)}</span>}
+    </Focusable>
+  );
+
   const currentSection = SECTIONS.find((s) => s.id === current) ?? SETTINGS;
   return (
     <nav class={'sidebar' + (open ? ' sidebar-open' : '') + (hidden ? ' sidebar-hidden' : '')} id="tabbar" data-no-autofocus="" data-inert={playerOnTop ? '' : undefined}>
       <div class="sidebar-scrim" />
+      {home && (
+        <div class="topbar-wrap">
+          <div class="topbar" ref={barRef} data-focus-group="">
+            {SECTIONS.map((x) => barItem(x, x.id === 'search'))}
+            {barItem(SETTINGS, true)}
+          </div>
+        </div>
+      )}
       <div class="side-pill-wrap" data-inert={open ? '' : undefined}>
-        {stacked ? (
+        {home ? null : stacked ? (
           <Focusable
             key="back"
             class="side-pill side-pill-back"

@@ -2894,3 +2894,88 @@ img + .hero-title-backup {
   font-size: 1.3rem;
   color: var(--text-3);
 }
+
+/* ---- Home's section bar -------------------------------------------------------
+ * On Home the sections sit in one glass capsule at the top centre. On every
+ * other section they fold into the corner pill.
+ */
+
+.topbar-wrap {
+  position: absolute;
+  top: 2.25rem;
+  inset-inline: 0;
+  display: flex;
+  justify-content: center;
+  transition:
+    opacity 0.22s linear,
+    transform 0.3s var(--ease);
+  animation: topbar-in 0.3s var(--ease) both;
+}
+
+@keyframes topbar-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -1rem, 0);
+  }
+}
+
+.sidebar-hidden .topbar-wrap:not(:focus-within) {
+  opacity: 0;
+  transform: translate3d(0, -6rem, 0);
+}
+
+.topbar {
+  pointer-events: auto;
+  position: relative;
+  height: 4.6rem;
+  padding: 0.45rem;
+  border-radius: 2.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: var(--glass-solid);
+  box-shadow: var(--glass-edge), var(--glass-lift);
+}
+
+.top-item {
+  height: 3.7rem;
+  padding: 0 1.7rem;
+  border-radius: 1.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.7rem;
+  font-weight: 600;
+  color: var(--text-2);
+  white-space: nowrap;
+  transition:
+    background-color 0.15s linear,
+    color 0.15s linear,
+    transform 0.2s var(--ease);
+}
+
+.top-item-icon {
+  width: 3.7rem;
+  padding: 0;
+  font-size: 1.6rem;
+}
+
+.top-item-on {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.top-item:focus {
+  background: var(--lit);
+  color: #000;
+  transform: scale(1.06);
+  box-shadow: var(--lit-lift);
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .app:not(.reduce-transparency) .topbar {
+    background: var(--glass-fill);
+    -webkit-backdrop-filter: var(--glass-blur);
+    backdrop-filter: var(--glass-blur);
+  }
+}
