@@ -4,6 +4,9 @@
 #
 #   bash install-on-stick.sh [path/to/thalcotv_armv7.vpkg]
 #
+# The same file is also shared as install-on-stick.txt; it runs the same way:
+#   bash install-on-stick.txt
+#
 # Before starting, have a free Amazon Developer account
 # (https://developer.amazon.com) and the stick on the same Wi-Fi or network
 # as this computer.

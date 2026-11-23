@@ -89,6 +89,9 @@ jobs:
           path: out/*.vpkg
           if-no-files-found: error
 
+      # A plain-text copy of the installer, for places that refuse .sh files.
+      - run: cp scripts/install-on-stick.sh out/install-on-stick.txt
+
       - name: Publish to the "latest" release
         if: github.event_name != 'pull_request'
         uses: softprops/action-gh-release@v2
@@ -102,4 +105,5 @@ jobs:
           files: |
             out/*.vpkg
             scripts/install-on-stick.sh
+            out/install-on-stick.txt
           make_latest: true
