@@ -280,3 +280,21 @@ describe('phone pairing', () => {
     expect(parseFragment('#t=evil&k=short')).toBeNull();
   });
 });
+
+describe('trailers', () => {
+  it('collects YouTube ids, real trailers first, without duplicates or junk', async () => {
+    const { trailerIds } = await import('../src/core/trailers');
+    expect(
+      trailerIds({
+        trailers: [
+          { source: 'aaaaaaaaaaa', type: 'Clip' },
+          { source: 'bbbbbbbbbbb', type: 'Trailer' },
+          { source: 'not a youtube id', type: 'Trailer' },
+        ],
+        trailerStreams: [{ title: 'T', ytId: 'bbbbbbbbbbb' }, { ytId: 'ccccccccccc' }],
+      }),
+    ).toEqual(['bbbbbbbbbbb', 'aaaaaaaaaaa', 'ccccccccccc']);
+    expect(trailerIds(null)).toEqual([]);
+    expect(trailerIds({})).toEqual([]);
+  });
+});

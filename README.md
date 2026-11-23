@@ -63,6 +63,10 @@ Only changes under `vega/` (the shell itself) need a new `.vpkg`.
 - **Watch tracking.** Automatic: resume points per movie and per episode,
   Continue Watching, watched marks (70% rule, as in Stremio), next episode
   lined up, Up Next countdown. Manual corrections live in the hold-Select menu.
+- **Trailers.** A Trailer button on title pages plays the official trailer
+  full screen with the remote (play/pause, skip, Back). Trailer ids come from
+  the title's metadata (Cinemeta), and play through YouTube's embedded player;
+  if one refuses to play embedded, the next one for that title is tried.
 - **Library** with sort (recently watched, added, title, year, most watched)
   and filters (in progress, watched, not watched, by type).
 - **Languages.** Interface in English, Arabic (right to left), Spanish, French,
@@ -126,7 +130,9 @@ The result is `vega/build/armv7-release/thalcotv_armv7.vpkg`.
   you have the right to use.
 - Torrent sources need a streaming server on your network (Settings >
   Streaming Server); the stick cannot run one itself.
-- YouTube and "open in browser" sources are listed but cannot be played.
+- Trailers need the published interface: YouTube's embedded player does not
+  run from the copy packaged inside the app. "Open in browser" sources are
+  listed but cannot be played.
 - Adding from a phone needs the interface to be published (the phone page is
   part of it) and uses the public relay ntfy.sh to carry the encrypted link.
   If either is unavailable, Add by URL still works.

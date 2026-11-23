@@ -30,7 +30,8 @@ export function TabBar() {
   const current = tab.value;
   const depth = stack.value.length;
   const stacked = depth > 0;
-  const playerOnTop = stacked && stack.value[depth - 1].route.name === 'player';
+  const topRoute = stacked ? stack.value[depth - 1].route.name : '';
+  const playerOnTop = topRoute === 'player' || topRoute === 'trailer';
   const open = sidebarOpen.value && !stacked;
   const hidden = playerOnTop || (!stacked && chromeHidden.value && !open);
   const pillRef = useRef<HTMLDivElement | null>(null);

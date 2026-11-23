@@ -151,7 +151,10 @@ export function StreamsScreen({ active, meta, video, auto, startAt }: Props) {
             key={i}
             class={'stream' + (s.playable ? '' : ' stream-blocked')}
             isDefault={i === 0}
-            onSelect={() => (s.playable ? start(streams, i) : undefined)}
+            onSelect={() => {
+              if (s.playable) start(streams, i);
+              else if (s.kind === 'youtube' && s.stream.ytId) push({ name: 'trailer', title: meta.name, ids: [s.stream.ytId] });
+            }}
           >
             <div class="stream-main">
               <div class="stream-label">

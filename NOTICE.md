@@ -37,3 +37,6 @@ Neither provides streams.
 Adding an add-on from a phone passes one small encrypted message through the
 public relay at https://ntfy.sh. The encryption key never leaves the phone and
 the TV, and nothing is sent unless the pairing screen is used.
+
+Trailers are played with YouTube's embedded player (youtube-nocookie.com),
+loaded only when a trailer is opened. YouTube is a trademark of Google LLC.

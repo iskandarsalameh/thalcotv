@@ -30,7 +30,8 @@ import { EmptyState, Loading } from '../components/Overlays';
 import { play } from '../actions';
 import { openMenu, showToast } from '../overlay';
 import { ensureFocus, focusFirst } from '../../nav/spatial';
-import { pop } from '../../nav/router';
+import { pop, push } from '../../nav/router';
+import { findTrailers, trailerIds } from '../../core/trailers';
 
 function formatClock(ms: number): string {
   const total = Math.max(0, Math.round(ms / 1000));
@@ -66,6 +67,16 @@ export function DetailsScreen({ active, type, id, preview }: Props) {
   const item = library.value[id];
   const wanted = useRef<{ choose: boolean; fromStart: boolean } | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [trailers, setTrailers] = useState<string[]>(() => trailerIds(preview as Meta | undefined));
+
+  // Trailers come with the metadata; ask Cinemeta when this title's add-on has none.
+  useEffect(() => {
+    if (!meta) return;
+    const ctrl = new AbortController();
+    setTrailers(trailerIds(meta));
+    findTrailers(meta, ctrl.signal).then((ids) => !ctrl.signal.aborted && setTrailers(ids));
+    return () => ctrl.abort();
+  }, [meta]);
 
   useEffect(() => {
     const ctrl = new AbortController();
@@ -216,6 +227,11 @@ export function DetailsScreen({ active, type, id, preview }: Props) {
             {resumeMs > 0 && (
               <Focusable class="btn" onSelect={() => startPlay(false, true)}>
                 <Icon name="restart" /> {t('details.startOver')}
+              </Focusable>
+            )}
+            {trailers.length > 0 && (
+              <Focusable class="btn" onSelect={() => push({ name: 'trailer', title: shown.name, ids: trailers })}>
+                <Icon name="trailer" /> {t('details.trailer')}
               </Focusable>
             )}
             <Focusable class="btn" onSelect={() => startPlay(true)}>

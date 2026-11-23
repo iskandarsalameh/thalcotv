@@ -20,6 +20,7 @@ import { PairScreen } from './screens/Pair';
 import { DetailsScreen } from './screens/Details';
 import { StreamsScreen } from './screens/Streams';
 import { PlayerScreen } from '../player/PlayerScreen';
+import { TrailerScreen } from '../player/TrailerScreen';
 import { alert, confirm, overlays } from './overlay';
 import { chromeHidden, sidebarOpen, updateReady } from './state';
 
@@ -49,6 +50,8 @@ function StackScreen({ entry, active }: { entry: StackEntry; active: boolean }) 
       return <StreamsScreen active={active} meta={r.meta} video={r.video} auto={r.auto} startAt={r.startAt} />;
     case 'player':
       return <PlayerScreen active={active} meta={r.meta} video={r.video} streams={r.streams} index={r.index} startAt={r.startAt} />;
+    case 'trailer':
+      return <TrailerScreen active={active} title={r.title} ids={r.ids} />;
     case 'catalog':
       return <BrowseScreen active={active} type={r.ref.catalog.type} initial={{ ref: r.ref, genre: r.genre }} title={r.title} />;
     case 'addons':
@@ -193,7 +196,7 @@ export function App() {
     const first = setTimeout(check, 20000);
     const poll = setInterval(check, 20 * 60 * 1000);
     const idle = setInterval(() => {
-      const playing = stack.value.some((e) => e.route.name === 'player' || e.route.name === 'streams');
+      const playing = stack.value.some((e) => e.route.name === 'player' || e.route.name === 'streams' || e.route.name === 'trailer');
       if (updateReady.value && !playing && overlays.value.length === 0 && Date.now() - lastInput.current > IDLE_BEFORE_UPDATE_MS) {
         flushLibrary();
         applyUpdate();
