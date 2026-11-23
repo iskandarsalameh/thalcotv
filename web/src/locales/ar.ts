@@ -181,6 +181,7 @@ const dict: Record<string, string> = {
   'addons.tab.installed': 'المثبّتة ({n})',
   'addons.tab.catalog': 'إضافات المجتمع',
   'addons.addFromPhone': 'إضافة من الهاتف',
+  'addons.add': 'إضافة',
   'pair.title': 'أضف من هاتفك',
   'pair.step1': 'امسح هذا الرمز بكاميرا هاتفك.',
   'pair.step2': 'الصق رابط الإضافة في الصفحة التي تُفتح.',

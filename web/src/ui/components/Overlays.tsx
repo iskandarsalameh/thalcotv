@@ -52,8 +52,9 @@ function Sheet({ req }: { req: MenuRequest }) {
           {req.title && <div class="sheet-title">{req.title}</div>}
           {req.message && <div class="sheet-message">{req.message}</div>}
           <div class={'input-field' + (text ? '' : ' input-empty')} dir="ltr">
-            {text || req.placeholder || ''}
-            <span class="caret" />
+            {!text && <span class="caret" />}
+            <span class="input-text">{text || req.placeholder || ''}</span>
+            {text && <span class="caret" />}
           </div>
           <Keyboard value={text} onChange={setText} layout={req.layout ?? 'text'} onSubmit={() => req.resolve(text.trim() || null)} />
         </div>

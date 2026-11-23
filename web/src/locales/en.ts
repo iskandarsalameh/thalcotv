@@ -181,6 +181,7 @@ const en: Record<string, string> = {
   'addons.tab.installed': 'Installed ({n})',
   'addons.tab.catalog': 'Community Catalog',
   'addons.addFromPhone': 'Add from Phone',
+  'addons.add': 'Add',
   'pair.title': 'Add from Your Phone',
   'pair.step1': 'Scan this code with your phone camera.',
   'pair.step2': 'Paste the add-on link on the page that opens.',

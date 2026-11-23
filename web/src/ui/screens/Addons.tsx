@@ -160,24 +160,22 @@ export function AddonsScreen({ active }: { active: boolean }) {
     <div class="screen screen-browse" data-focus-group="" ref={rootRef}>
       <header class="page-header">
         <h1 class="page-title">{t('tab.addons')}</h1>
-        <div class="chip-row" data-focus-group="">
+        <div class="chip-row chip-row-wide" data-focus-group="">
           <Focusable class={'chip' + (view === 'installed' ? ' chip-on' : '')} isDefault={view === 'installed'} onSelect={() => setView('installed')}>
             {t('addons.tab.installed', { n: installed.length })}
           </Focusable>
           <Focusable class={'chip' + (view === 'catalog' ? ' chip-on' : '')} isDefault={view === 'catalog'} onSelect={() => setView('catalog')}>
             {t('addons.tab.catalog')}
           </Focusable>
+          <Focusable class="chip chip-accent" onSelect={() => push({ name: 'pair' })}>
+            <Icon name="plus" /> {t('addons.add')}
+          </Focusable>
           {view === 'catalog' && types.length > 0 && (
-            <Focusable class="chip" onSelect={() => void pickType()}>
+            <Focusable class="chip chip-filter" onSelect={() => void pickType()}>
+              <span class="chip-filter-label">{t('browse.type')}</span>
               {typeFilter === 'all' ? t('library.allTypes') : typeLabel(typeFilter)} <Icon name="chevronDown" />
             </Focusable>
           )}
-          <Focusable class="chip chip-accent" onSelect={() => push({ name: 'pair' })}>
-            <Icon name="qr" /> {t('addons.addFromPhone')}
-          </Focusable>
-          <Focusable class="chip" onSelect={() => void addByUrl()}>
-            <Icon name="keyboard" /> {t('addons.addByUrl')}
-          </Focusable>
         </div>
       </header>
       <div class="page-body">

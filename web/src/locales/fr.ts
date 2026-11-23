@@ -181,6 +181,7 @@ const dict: Record<string, string> = {
   'addons.tab.installed': 'Installées ({n})',
   'addons.tab.catalog': 'Catalogue communautaire',
   'addons.addFromPhone': 'Ajouter depuis le téléphone',
+  'addons.add': 'Ajouter',
   'pair.title': 'Ajouter depuis votre téléphone',
   'pair.step1': 'Scannez ce code avec l’appareil photo du téléphone.',
   'pair.step2': 'Collez le lien de l’extension sur la page qui s’ouvre.',
