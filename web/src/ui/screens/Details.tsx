@@ -10,7 +10,6 @@ import {
   library,
   resumePoint,
   seasonsOf,
-  setItemWatched,
   setVideoWatched,
   setVideosWatched,
   sortVideos,
@@ -230,17 +229,6 @@ export function DetailsScreen({ active, type, id, preview }: Props) {
               }}
             >
               <Icon name={saved ? 'check' : 'plus'} /> {saved ? t('details.inLibrary') : t('details.addToLibrary')}
-            </Focusable>
-            <Focusable
-              class="btn"
-              disabled={!meta}
-              onSelect={() => {
-                if (!meta) return;
-                setItemWatched(meta, !watched);
-                showToast(!watched ? t('toast.markedWatched') : t('toast.markedUnwatched'));
-              }}
-            >
-              <Icon name="eye" /> {watched ? t('details.markUnwatched') : t('details.markWatched')}
             </Focusable>
           </div>
         </section>

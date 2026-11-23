@@ -6,7 +6,7 @@ import { signal, computed } from '@preact/signals';
 import type { Meta, MetaPreview, RankedStream, Video } from '../core/types';
 import type { CatalogRef } from '../core/catalogs';
 
-export type TabId = 'home' | 'movie' | 'series' | 'library' | 'search' | 'addons' | 'settings';
+export type TabId = 'search' | 'home' | 'movie' | 'series' | 'library' | 'settings';
 
 export type Route =
   | { name: 'details'; type: string; id: string; preview?: MetaPreview; autoFocusVideoId?: string }
@@ -22,6 +22,7 @@ export type Route =
       startAt?: number;
     }
   | { name: 'catalog'; ref: CatalogRef; title: string; genre?: string }
+  | { name: 'addons' }
   | { name: 'addon'; transportUrl: string };
 
 export interface StackEntry {

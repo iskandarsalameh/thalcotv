@@ -2,7 +2,7 @@
 // and the long-press menu on any poster.
 
 import type { Meta, MetaPreview, Video } from '../core/types';
-import { push, switchTab } from '../nav/router';
+import { push } from '../nav/router';
 import { hasStreamAddons } from '../core/streams';
 import {
   dismissFromContinue,
@@ -38,7 +38,7 @@ export async function play(meta: Meta, video: Video | null, opts: { choose?: boo
   const embedded = video?.streams && video.streams.length > 0;
   if (!embedded && !hasStreamAddons(meta.type, id)) {
     const go = await confirm(t('streams.noAddons.title'), t('streams.noAddons.message'), t('streams.noAddons.open'), t('common.cancel'));
-    if (go) switchTab('addons');
+    if (go) push({ name: 'addons' });
     return;
   }
   push({ name: 'streams', meta, video, auto: opts.auto ?? !opts.choose, startAt: opts.startAt });

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { analyzeStream, parseQuality, parseSize, rankStreams, type RankContext } from '../src/core/streams';
+import { analyzeStream, cleanStreamText, parseQuality, parseSize, rankStreams, type RankContext } from '../src/core/streams';
 import { activeCues, decodeSubtitleBytes, parseSubtitles, sanitizeCueText } from '../src/core/subtitles';
 import { normalizeManifestUrl, resourceUrl, supportsResource } from '../src/core/addons';
 import { detectStreamLanguages, langName, normLang } from '../src/core/langs';
@@ -86,6 +86,15 @@ describe('stream analysis', () => {
     const en: Stream = { url: 'https://h/b.mp4', title: 'Film 1080p ENGLISH' };
     const c = ctx({ settings: { maxQuality: 0, audioLanguage: 'fra', streamingServerUrl: '' } });
     expect(rankStreams([analyzeStream(en, A, c), analyzeStream(fr, A, c)])[0].stream).toBe(fr);
+  });
+
+  it('shows stream facts as text badges without emoji', () => {
+    const s: Stream = { url: 'https://h/a.mp4', name: 'Addon\n4k', title: 'Movie.2023.2160p.WEB-DL.DDP5.1.H265\n\u{1F464} 12 \u{1F4BE} 15.2 GB \u2699\uFE0F Site\n\u{1F1EB}\u{1F1F7} / \u{1F1EC}\u{1F1E7}' };
+    const r = analyzeStream(s, A, ctx());
+    expect(r.detail).toBe('Movie.2023.2160p.WEB-DL.DDP5.1.H265');
+    expect(r.label).toBe('4K · DD+ · 15 GB · EN FR');
+    expect(r.seeders).toBe(12);
+    expect(cleanStreamText('\u26A1 Cached release from a long provider name')).toBe('Cached release from a long provider name');
   });
 
   it('never ranks an unplayable source above a playable one', () => {

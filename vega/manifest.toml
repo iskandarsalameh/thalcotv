@@ -32,9 +32,11 @@ allowed-domains = ["*"]
 [[wants.service]]
 id = "com.amazon.webview.renderer_service"
 
-# On-screen keyboard support
+# System keyboard, used for voice dictation
 [[wants.service]]
 id = "com.amazon.inputmethod.service"
+[[wants.service]]
+id = "com.amazon.inputd.service"
 
 # Video playback (WebView and the native player)
 [[wants.service]]

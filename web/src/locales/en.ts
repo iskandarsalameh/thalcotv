@@ -78,6 +78,13 @@ const en: Record<string, string> = {
   'kb.space': 'Space',
   'kb.delete': 'Delete',
   'kb.clear': 'Clear',
+  'kb.dictate': 'Dictate',
+  'kb.listening': 'Listening…',
+  'kb.dictateHint': 'Hold the microphone button on the remote and speak, or type. Press Back when done.',
+  'settings.section.addons': 'Add-ons',
+  'settings.addons': 'Manage Add-ons',
+  'settings.addons.count': '{n} installed',
+  'settings.addons.hint': 'Catalogs, sources and subtitles come from add-ons.',
 
   'menu.details': 'Open',
   'menu.play': 'Play',
@@ -298,7 +305,7 @@ const en: Record<string, string> = {
 
   'welcome.title': 'Welcome to Thalco TV',
   'welcome.message':
-    'Hold Select on any title for more options.\n\nCatalogs, sources and subtitles come from add-ons. Find them under Add-ons in the top bar.',
+    'Hold Select on any title for more options.\n\nCatalogs, sources and subtitles come from add-ons. Manage them in Settings.',
   'welcome.start': 'Get Started',
 };
 

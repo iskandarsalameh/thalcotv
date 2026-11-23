@@ -10,7 +10,7 @@ import { Img } from '../components/Img';
 import { EmptyState, Spinner } from '../components/Overlays';
 import { streamIdOf } from '../actions';
 import { ensureFocus } from '../../nav/spatial';
-import { pop, replace, switchTab } from '../../nav/router';
+import { pop, push, replace } from '../../nav/router';
 
 interface Props {
   active: boolean;
@@ -138,7 +138,7 @@ export function StreamsScreen({ active, meta, video, auto, startAt }: Props) {
         {streams.length === 0 && pending > 0 && <Spinner label={t('streams.finding')} />}
         {streams.length === 0 && pending === 0 && (
           <EmptyState icon="warn" title={t('streams.none.title')} message={t('streams.none.message')}>
-            <Focusable class="btn btn-primary" onSelect={() => switchTab('addons')}>
+            <Focusable class="btn btn-primary" onSelect={() => push({ name: 'addons' })}>
               {t('home.empty.action')}
             </Focusable>
             <Focusable class="btn" onSelect={() => pop()}>

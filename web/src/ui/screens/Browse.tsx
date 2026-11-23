@@ -11,7 +11,7 @@ import { EmptyState, Loading } from '../components/Overlays';
 import { openDetails, posterMenu } from '../actions';
 import { openMenu } from '../overlay';
 import { ensureFocus } from '../../nav/spatial';
-import { switchTab } from '../../nav/router';
+import { push } from '../../nav/router';
 
 function refName(ref: CatalogRef): string {
   const raw = ref.catalog.name || ref.catalog.id;
@@ -146,7 +146,7 @@ export function BrowseScreen({ active, type: initialType, initial, title }: Prop
         ) : items.length === 0 ? (
           refs.length === 0 ? (
             <EmptyState icon="puzzle" title={t('browse.noCatalogs.title')} message={t('browse.noCatalogs.message')}>
-              <Focusable class="btn btn-primary" onSelect={() => switchTab('addons')}>
+              <Focusable class="btn btn-primary" onSelect={() => push({ name: 'addons' })}>
                 {t('home.empty.action')}
               </Focusable>
             </EmptyState>

@@ -78,6 +78,13 @@ const dict: Record<string, string> = {
   'kb.space': 'Leerzeichen',
   'kb.delete': 'Löschen',
   'kb.clear': 'Leeren',
+  'kb.dictate': 'Diktieren',
+  'kb.listening': 'Hört zu…',
+  'kb.dictateHint': 'Mikrofontaste der Fernbedienung gedrückt halten und sprechen oder tippen. Mit Zurück beenden.',
+  'settings.section.addons': 'Add-ons',
+  'settings.addons': 'Add-ons verwalten',
+  'settings.addons.count': '{n} installiert',
+  'settings.addons.hint': 'Kataloge, Quellen und Untertitel kommen von Add-ons.',
 
   'menu.details': 'Öffnen',
   'menu.play': 'Abspielen',
@@ -298,7 +305,7 @@ const dict: Record<string, string> = {
 
   'welcome.title': 'Willkommen bei Thalco TV',
   'welcome.message':
-    'Halte auf einem Titel die Auswahltaste gedrückt, um mehr Optionen zu sehen.\n\nKataloge, Quellen und Untertitel kommen von Add-ons. Du findest sie oben in der Leiste unter „Add-ons“.',
+    'Auswahltaste auf einem Titel gedrückt halten für mehr Optionen.\n\nKataloge, Quellen und Untertitel kommen von Add-ons. Verwaltet werden sie in den Einstellungen.',
   'welcome.start': "Los geht's",
 };
 

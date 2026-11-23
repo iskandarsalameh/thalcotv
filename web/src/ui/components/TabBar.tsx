@@ -5,13 +5,13 @@ import { chromeHidden, updateReady } from '../state';
 import { Focusable } from './Focusable';
 import { Icon } from './Icon';
 
+// Search opens the bar and Settings closes it, as icons; the places you browse sit between them.
 const TABS: { id: TabId; icon?: string }[] = [
+  { id: 'search', icon: 'search' },
   { id: 'home' },
   { id: 'movie' },
   { id: 'series' },
   { id: 'library' },
-  { id: 'search', icon: 'search' },
-  { id: 'addons' },
   { id: 'settings', icon: 'gear' },
 ];
 

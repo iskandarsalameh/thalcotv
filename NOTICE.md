@@ -19,6 +19,9 @@ endorsed by Stremio or Smart Code OOD.
 ## Bundled open-source software
 
 - Preact and @preact/signals (MIT)
+- Phosphor Icons (MIT), https://phosphoricons.com
+- Inter typeface (SIL Open Font License 1.1)
+- IBM Plex Sans Arabic typeface (SIL Open Font License 1.1)
 - hls.js (Apache-2.0)
 - React Native for Vega and Amazon's Vega libraries (see their licenses in `vega/node_modules`)
 

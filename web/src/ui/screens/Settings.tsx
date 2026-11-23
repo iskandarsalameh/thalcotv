@@ -6,7 +6,8 @@ import { langName, languageChoices } from '../../core/langs';
 import { caps } from '../../core/caps';
 import { normalizeServerUrl, probeServer } from '../../core/server';
 import { clearByPrefix } from '../../core/storage';
-import { clearResourceCache, resetAddons, initAddons } from '../../core/addons';
+import { addons, clearResourceCache, resetAddons, initAddons } from '../../core/addons';
+import { push } from '../../nav/router';
 import { clearLibrary, library } from '../../core/library';
 import { CURRENT, applyUpdate, updateAvailable } from '../../core/update';
 import { nativeBridge } from '../../core/bridge';
@@ -159,8 +160,18 @@ export function SettingsScreen({ active }: { active: boolean }) {
           <h1 class="page-title">{t('tab.settings')}</h1>
         </header>
 
+        <Section title={t('settings.section.addons')}>
+          <Item
+            isDefault
+            label={t('settings.addons')}
+            hint={t('settings.addons.hint')}
+            value={t('settings.addons.count', { n: addons.value.length })}
+            onSelect={() => push({ name: 'addons' })}
+          />
+        </Section>
+
         <Section title={t('settings.section.playback')}>
-          <Item isDefault label={t('settings.autoPlayBest')} hint={t('settings.autoPlayBest.hint')} value={onOff(s.autoPlayBest)} onSelect={() => toggle('autoPlayBest')} />
+          <Item label={t('settings.autoPlayBest')} hint={t('settings.autoPlayBest.hint')} value={onOff(s.autoPlayBest)} onSelect={() => toggle('autoPlayBest')} />
           <Item label={t('settings.autoFailover')} hint={t('settings.autoFailover.hint')} value={onOff(s.autoFailover)} onSelect={() => toggle('autoFailover')} />
           <Item label={t('settings.autoPlayNext')} value={onOff(s.autoPlayNext)} onSelect={() => toggle('autoPlayNext')} />
           <Item

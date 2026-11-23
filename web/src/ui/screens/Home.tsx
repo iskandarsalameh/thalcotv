@@ -13,7 +13,7 @@ import { Img } from '../components/Img';
 import { EmptyState, Loading } from '../components/Overlays';
 import { openDetails, playFromPreview, posterMenu } from '../actions';
 import { chromeHidden } from '../state';
-import { switchTab } from '../../nav/router';
+import { push } from '../../nav/router';
 import { ensureFocus, focusFirst, getFocused, hasInteracted } from '../../nav/spatial';
 
 export function catalogTitle(ref: CatalogRef): string {
@@ -215,7 +215,7 @@ export function HomeScreen({ active }: { active: boolean }) {
         ))}
         {refs.length === 0 && (
           <EmptyState icon="puzzle" title={t('home.empty.title')} message={t('home.empty.message')}>
-            <Focusable class="btn btn-primary" onSelect={() => switchTab('addons')}>
+            <Focusable class="btn btn-primary" onSelect={() => push({ name: 'addons' })}>
               {t('home.empty.action')}
             </Focusable>
           </EmptyState>

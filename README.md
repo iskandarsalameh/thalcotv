@@ -29,18 +29,20 @@ Only changes under `vega/` (the shell itself) need a new `.vpkg`.
 - **Remote first.** Every control is reachable with the D-pad. Focus is shown
   by lift and a light fill, rows remember where you were, Back always goes up
   one level, holding Select opens options.
-- **Home, Movies, Series, Library, Search, Add-ons, Settings** in a top tab bar
-  that gets out of the way when you scroll.
-- **Add-ons** like Stremio: browse the community catalog, install by URL with
-  the on-screen keyboard, reorder by priority, uninstall.
+- **Search, Home, Movies, Series, Library, Settings** in a top tab bar that
+  gets out of the way when you scroll.
+- **Add-ons** like Stremio, under Settings: browse the community catalog,
+  install by URL, reorder by priority, uninstall.
+- **Keyboard with Dictate.** A tidy grid for the remote, plus a Dictate key
+  that hands over to voice input (the system keyboard listens while the
+  remote's microphone button is held).
 - **Smart source selection.** Streams from all add-ons are ranked for this
   device (formats it decodes natively first, then quality, your audio language,
   file size, the release used for the previous episode). Play starts the best
   one; if it fails or stalls the next one takes over at the same position.
-- **Watch tracking.** Resume points per movie and per episode, Continue
-  Watching, watched marks (70% rule, as in Stremio), next episode lined up
-  automatically, Up Next countdown, mark watched/unwatched by episode, season
-  or title.
+- **Watch tracking.** Automatic: resume points per movie and per episode,
+  Continue Watching, watched marks (70% rule, as in Stremio), next episode
+  lined up, Up Next countdown. Manual corrections live in the hold-Select menu.
 - **Library** with sort (recently watched, added, title, year, most watched)
   and filters (in progress, watched, not watched, by type).
 - **Languages.** Interface in English, Arabic (right to left), Spanish, French,

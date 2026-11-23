@@ -78,6 +78,13 @@ const dict: Record<string, string> = {
   'kb.space': 'Espaço',
   'kb.delete': 'Apagar',
   'kb.clear': 'Limpar',
+  'kb.dictate': 'Ditar',
+  'kb.listening': 'Ouvindo…',
+  'kb.dictateHint': 'Segure o botão de microfone do controle e fale, ou digite. Pressione Voltar ao terminar.',
+  'settings.section.addons': 'Complementos',
+  'settings.addons': 'Gerenciar complementos',
+  'settings.addons.count': '{n} instalados',
+  'settings.addons.hint': 'Catálogos, fontes e legendas vêm dos complementos.',
 
   'menu.details': 'Abrir',
   'menu.play': 'Reproduzir',
@@ -298,7 +305,7 @@ const dict: Record<string, string> = {
 
   'welcome.title': 'Boas-vindas ao Thalco TV',
   'welcome.message':
-    'Mantenha o botão de seleção pressionado em qualquer título para ver mais opções.\n\nCatálogos, fontes e legendas vêm dos complementos. Encontre-os em Complementos, na barra superior.',
+    'Segure Selecionar em qualquer título para mais opções.\n\nCatálogos, fontes e legendas vêm dos complementos. Gerencie-os nos Ajustes.',
   'welcome.start': 'Começar',
 };
 

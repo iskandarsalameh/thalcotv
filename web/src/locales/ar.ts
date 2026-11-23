@@ -78,6 +78,13 @@ const dict: Record<string, string> = {
   'kb.space': 'مسافة',
   'kb.delete': 'حذف',
   'kb.clear': 'مسح',
+  'kb.dictate': 'إملاء',
+  'kb.listening': 'جارٍ الاستماع…',
+  'kb.dictateHint': 'اضغط مطوّلًا على زر الميكروفون في جهاز التحكم وتحدّث، أو اكتب. اضغط رجوع عند الانتهاء.',
+  'settings.section.addons': 'الإضافات',
+  'settings.addons': 'إدارة الإضافات',
+  'settings.addons.count': '{n} مثبّتة',
+  'settings.addons.hint': 'القوائم والمصادر والترجمات تأتي من الإضافات.',
 
   'menu.details': 'فتح',
   'menu.play': 'تشغيل',
@@ -298,7 +305,7 @@ const dict: Record<string, string> = {
 
   'welcome.title': 'مرحبًا بك في Thalco TV',
   'welcome.message':
-    'اضغط مطوّلًا على زر الاختيار فوق أي عنوان لخيارات أكثر.\n\nالقوائم والمصادر والترجمات تأتي من الإضافات. تجدها تحت «الإضافات» في الشريط العلوي.',
+    'اضغط مطوّلًا على زر الاختيار فوق أي عنوان لخيارات أكثر.\n\nالقوائم والمصادر والترجمات تأتي من الإضافات. تديرها من الإعدادات.',
   'welcome.start': 'ابدأ',
 };
 

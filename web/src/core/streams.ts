@@ -5,8 +5,24 @@
 import type { Addon, LibraryItem, RankedStream, Stream } from './types';
 import { addons, fetchJSON, resourceUrl, supportsResource } from './addons';
 import { caps, type Caps } from './caps';
-import { detectStreamLanguages, normLang } from './langs';
+import { detectStreamLanguages, langTwo, normLang } from './langs';
 import { settings, type Settings } from './settings';
+
+const PICTOGRAPHS = /[\p{Extended_Pictographic}\p{Regional_Indicator}\p{Variation_Selector}\p{Join_Control}]/gu;
+
+/**
+ * Add-ons decorate stream text with emoji (disk, person, flags). Those lines
+ * only repeat facts already shown as badges, so they are dropped, and stray
+ * symbols are removed from the rest.
+ */
+export function cleanStreamText(text: string): string {
+  return text
+    .split('\n')
+    .filter((line) => !/[\p{Extended_Pictographic}\p{Regional_Indicator}]/u.test(line) || line.replace(PICTOGRAPHS, '').replace(/[\d\s.,|:/GMKTBgmktbi-]/g, '').length > 12)
+    .map((line) => line.replace(PICTOGRAPHS, ' ').replace(/\s{2,}/g, ' ').trim())
+    .filter(Boolean)
+    .join('\n');
+}
 
 export function streamText(s: Stream): string {
   return [s.name, s.title, s.description, s.behaviorHints?.filename].filter(Boolean).join('\n');
@@ -48,7 +64,7 @@ function parseAudio(text: string): string {
   if (/\batmos\b/i.test(text)) return 'Atmos';
   if (/\btrue-?hd\b/i.test(text)) return 'TrueHD';
   if (/\bdts(?:-?(?:hd|x|ma))?\b/i.test(text)) return 'DTS';
-  if (/\b(e-?ac-?3|ddp|dd\+|dolby\s?digital\s?plus)\b/i.test(text)) return 'DD+';
+  if (/\be-?ac-?3\b|\bddp(?=\d|\b)|\bdd\+|\bdolby\s?digital\s?plus\b/i.test(text)) return 'DD+';
   if (/\b(ac-?3|dd\s?5\.1|dolby\s?digital)\b/i.test(text)) return 'DD';
   if (/\baac\b/i.test(text)) return 'AAC';
   if (/\bopus\b/i.test(text)) return 'Opus';
@@ -209,14 +225,20 @@ export function analyzeStream(s: Stream, addon: Pick<Addon, 'transportUrl'> & { 
   const order = ctx.addonOrder.indexOf(addon.transportUrl);
   if (order > 0) score -= order * 6;
 
+  const spoken = languages
+    .map((code) => (code === 'multi' ? 'Multi' : langTwo(code).toUpperCase()))
+    .filter(Boolean)
+    .slice(0, 4)
+    .join(' ');
   const badges = [
     qualityLabel(quality),
     dolbyVision ? 'Dolby Vision' : hdr ? 'HDR' : '',
     audio,
     formatSize(size),
+    spoken,
   ].filter(Boolean);
-  const firstLine = (s.name || addon.name || '').split('\n')[0].trim();
-  const detailSource = (s.title || s.description || s.behaviorHints?.filename || '').trim();
+  const firstLine = cleanStreamText((s.name || addon.name || '').split('\n')[0]);
+  const detailSource = cleanStreamText(s.title || s.description || s.behaviorHints?.filename || '');
 
   return {
     stream: s,
@@ -236,7 +258,7 @@ export function analyzeStream(s: Stream, addon: Pick<Addon, 'transportUrl'> & { 
     playable,
     blockedReason,
     score,
-    label: badges.length ? badges.join(' · ') : firstLine,
+    label: badges.length ? badges.join(' · ') : firstLine || addon.name,
     detail: detailSource.split('\n').slice(0, 3).join('\n'),
   };
 }

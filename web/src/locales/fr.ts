@@ -78,6 +78,13 @@ const dict: Record<string, string> = {
   'kb.space': 'Espace',
   'kb.delete': 'Effacer',
   'kb.clear': 'Tout effacer',
+  'kb.dictate': 'Dicter',
+  'kb.listening': 'Écoute…',
+  'kb.dictateHint': 'Maintenez le bouton micro de la télécommande et parlez, ou saisissez le texte. Appuyez sur Retour pour terminer.',
+  'settings.section.addons': 'Extensions',
+  'settings.addons': 'Gérer les extensions',
+  'settings.addons.count': '{n} installées',
+  'settings.addons.hint': 'Les catalogues, les sources et les sous-titres viennent des extensions.',
 
   'menu.details': 'Ouvrir',
   'menu.play': 'Lecture',
@@ -298,7 +305,7 @@ const dict: Record<string, string> = {
 
   'welcome.title': 'Bienvenue sur Thalco TV',
   'welcome.message':
-    "Maintenez la touche de sélection enfoncée sur un titre pour afficher plus d'options.\n\nLes catalogues, les sources et les sous-titres proviennent des extensions. Retrouvez-les sous Extensions, dans la barre du haut.",
+    'Maintenez Sélectionner sur un titre pour plus d’options.\n\nLes catalogues, les sources et les sous-titres viennent des extensions. Gérez-les dans les Réglages.',
   'welcome.start': 'Commencer',
 };
 

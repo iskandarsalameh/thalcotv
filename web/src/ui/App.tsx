@@ -34,8 +34,6 @@ function TabRoot({ active }: { active: boolean }) {
       return <LibraryScreen active={active} />;
     case 'search':
       return <SearchScreen active={active} />;
-    case 'addons':
-      return <AddonsScreen active={active} />;
     default:
       return <SettingsScreen active={active} />;
   }
@@ -52,6 +50,8 @@ function StackScreen({ entry, active }: { entry: StackEntry; active: boolean }) 
       return <PlayerScreen active={active} meta={r.meta} video={r.video} streams={r.streams} index={r.index} startAt={r.startAt} />;
     case 'catalog':
       return <BrowseScreen active={active} type={r.ref.catalog.type} initial={{ ref: r.ref, genre: r.genre }} title={r.title} />;
+    case 'addons':
+      return <AddonsScreen active={active} />;
     case 'addon':
       return <AddonScreen active={active} transportUrl={r.transportUrl} />;
   }
@@ -183,7 +183,7 @@ export function App() {
         )}
       </div>
       {layers.map((entry, i) => (
-        <div class="layer" key={entry.key} style={{ display: i === layers.length - 1 ? undefined : 'none' }}>
+        <div class="layer layer-stack" key={entry.key} style={{ display: i === layers.length - 1 ? undefined : 'none' }}>
           <StackScreen entry={entry} active={i === layers.length - 1} />
         </div>
       ))}

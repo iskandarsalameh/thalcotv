@@ -6,6 +6,62 @@
  * Only transform and opacity animate, so the stick's GPU does the work.
  */
 
+/* Typefaces ship with the app so text looks the same on every device.
+ * Inter (OFL) for Latin, IBM Plex Sans Arabic (OFL) for Arabic. */
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('../node_modules/@fontsource-variable/inter/files/inter-latin-ext-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('../node_modules/@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-400-normal.woff2') format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500;
+  src: url('../node_modules/@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-500-normal.woff2') format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: url('../node_modules/@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-600-normal.woff2') format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url('../node_modules/@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-700-normal.woff2') format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC;
+}
+
 :root {
   --safe-x: 5rem;
   --safe-y: 3.75rem;
@@ -33,7 +89,7 @@ body {
   background: #000;
   color: var(--text);
   overflow: hidden;
-  font-family: -apple-system, 'SF Pro Display', 'Amazon Ember', 'Inter', 'Helvetica Neue', Roboto, 'Noto Sans', 'Noto Sans Arabic', Arial, sans-serif;
+  font-family: 'Inter Variable', 'IBM Plex Sans Arabic', -apple-system, 'Amazon Ember', 'Helvetica Neue', Roboto, 'Noto Sans', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   user-select: none;
@@ -1526,51 +1582,113 @@ img + .hero-title-backup {
   }
 }
 
-.key-grid {
-  display: grid;
-  grid-template-columns: repeat(13, 1fr);
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+.keyboard {
+  position: relative;
 }
 
-.keyboard-compact .key-grid {
+.key-grid {
+  display: grid;
+  gap: 0.55rem;
+  margin-bottom: 0.55rem;
+}
+
+.key-grid-10 {
+  grid-template-columns: repeat(10, 1fr);
+}
+
+.key-grid-6 {
   grid-template-columns: repeat(6, 1fr);
 }
 
-.key-row {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+.key-grid-5 {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.key-grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.key-grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.keyboard-compact .key-grid-2 {
+  margin-top: 0.9rem;
+}
+
+.keyboard-wide .key-grid:last-of-type {
+  margin-top: 0.9rem;
 }
 
 .key {
-  height: 4.1rem;
-  border-radius: 0.8rem;
+  height: 4.2rem;
+  border-radius: 0.85rem;
   background: var(--fill);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.8rem;
+  gap: 0.6rem;
+  font-size: 1.9rem;
   font-weight: 600;
   white-space: nowrap;
+  overflow: hidden;
 }
 
-.key-wide {
-  flex: 1;
-  padding: 0 0.75rem;
-  font-size: 1.4rem;
+.key-snippet {
+  font-size: 1.45rem;
+}
+
+.key-action {
+  font-size: 1.45rem;
+  background: var(--fill-2);
+}
+
+.key-action .icon {
+  font-size: 1.7rem;
 }
 
 .key-submit {
   background: var(--fill-3);
 }
 
+.key-live {
+  background: var(--red);
+  color: #fff;
+}
+
 .key:focus {
   background: #fff;
   color: #000;
-  transform: scale(1.12);
+  transform: scale(1.1);
   box-shadow: 0 0.7rem 1.6rem rgba(0, 0, 0, 0.55);
   z-index: 1;
+}
+
+.key-action:focus {
+  transform: scale(1.05);
+}
+
+.key-hint {
+  margin-top: 0.9rem;
+  font-size: 1.35rem;
+  line-height: 1.4;
+  color: var(--text-2);
+  text-align: center;
+}
+
+/* Real text field used only to summon the system keyboard for voice input. */
+.ime-input {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  background: transparent;
+  color: transparent;
+  outline: none;
 }
 
 .toast {
@@ -1895,4 +2013,35 @@ img + .hero-title-backup {
 [dir='rtl'] .credits-desc,
 [dir='rtl'] .addon-desc {
   text-align: right;
+}
+
+[lang='ar'] body {
+  line-height: 1.5;
+}
+
+[lang='ar'] .page-title,
+[lang='ar'] .hero-title,
+[lang='ar'] .details-title,
+[lang='ar'] .shelf-title,
+[lang='ar'] .sheet-title,
+[lang='ar'] .player-title,
+[lang='ar'] .brand {
+  letter-spacing: 0;
+}
+
+[lang='ar'] .hero-eyebrow,
+[lang='ar'] .section-label,
+[lang='ar'] .upnext-label,
+[lang='ar'] .tag {
+  letter-spacing: 0;
+  font-size: 1.45rem;
+}
+
+/* Screens opened on top of a tab have no tab bar above them. */
+.layer-stack .page-header {
+  top: 4.25rem;
+}
+
+.layer-stack .page-body {
+  top: 9.75rem;
 }
