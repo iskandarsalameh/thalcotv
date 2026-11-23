@@ -2513,7 +2513,9 @@ img + .hero-title-backup {
   --glass-solid: rgba(52, 52, 56, 0.8);
   --glass-solid-panel: rgba(30, 30, 33, 0.97);
   --lit: rgba(255, 255, 255, 0.95);
-  --lit-lift: 0 0.9rem 2.2rem rgba(0, 0, 0, 0.38);
+  /* Same layers as --glass-edge + --glass-lift, so the shadow glides between the two
+   * states instead of jumping. */
+  --lit-lift: inset 0 0 0.55rem rgba(255, 255, 255, 0), inset 0 0 0 0.05rem rgba(255, 255, 255, 0), 0 0.9rem 2.2rem rgba(0, 0, 0, 0.38);
 }
 
 /* -- glass controls -- */
@@ -2564,6 +2566,7 @@ img + .hero-title-backup {
     linear-gradient(#000 0 0);
   mask-composite: exclude;
   pointer-events: none;
+  transition: opacity 0.2s linear;
 }
 
 [dir='rtl'] .btn::before,
@@ -2700,14 +2703,13 @@ img + .hero-title-backup {
     backdrop-filter: var(--glass-blur-panel);
   }
 
-  /* A lit control is opaque, so blurring under it would be wasted work. */
+  /* The blur stays on while a control is lit. Dropping it would be cheaper, but it
+   * cannot fade, so the page behind would flash through, sharp, mid-transition. */
   .app .btn:focus,
   .app .chip:focus,
   .app .pbtn:focus,
   .app .side-pill:focus {
     background: var(--lit);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
   }
 
   .app .btn-destructive:focus {
@@ -2948,10 +2950,6 @@ img + .hero-title-backup {
   font-weight: 600;
   color: var(--text-2);
   white-space: nowrap;
-  transition:
-    background-color 0.15s linear,
-    color 0.15s linear,
-    transform 0.2s var(--ease);
 }
 
 .top-item-icon {
