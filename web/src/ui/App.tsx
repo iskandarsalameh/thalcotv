@@ -7,7 +7,7 @@ import { flushLibrary } from '../core/library';
 import { nativeBridge } from '../core/bridge';
 import { applyUpdate, updateAvailable } from '../core/update';
 import { t } from '../core/i18n';
-import { TabBar } from './components/TabBar';
+import { TabBar, usesBar } from './components/TabBar';
 import { Overlays, EmptyState, Loading } from './components/Overlays';
 import { Focusable } from './components/Focusable';
 import { HomeScreen } from './screens/Home';
@@ -157,22 +157,29 @@ export function App() {
         pop();
         return true;
       }
-      // On Home, Back first returns to the bar at the top, then offers to leave.
-      // Elsewhere it opens the sidebar, and the next Back returns to Home.
-      const homeItem = () => document.querySelector<HTMLElement>('#tabbar .topbar [data-tab="home"]');
-      if (tab.value === 'home' && !sidebarOpen.value) {
+      // With the bar on screen, Back returns to it, then to Home, then offers to leave.
+      // On Search and Settings it opens the sidebar, and the next Back returns to Home.
+      const barItem = (id: string) => document.querySelector<HTMLElement>(`#tabbar .topbar [data-tab="${id}"]`);
+      const goHome = () => {
+        sidebarOpen.value = false;
+        switchTab('home');
+        setTimeout(() => focusEl(barItem('home')), 0);
+      };
+      if (usesBar(tab.value) && !sidebarOpen.value) {
         const bar = document.querySelector('#tabbar .topbar');
         if (bar && !bar.contains(document.activeElement)) {
-          focusEl(homeItem());
+          focusEl(barItem(tab.value));
+          return true;
+        }
+        if (tab.value !== 'home') {
+          goHome();
           return true;
         }
       } else if (!sidebarOpen.value) {
         sidebarOpen.value = true;
         return true;
       } else {
-        sidebarOpen.value = false;
-        switchTab('home');
-        setTimeout(() => focusEl(homeItem()), 0);
+        goHome();
         return true;
       }
       if (overlays.value.length === 0) {

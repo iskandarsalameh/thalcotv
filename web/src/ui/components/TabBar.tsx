@@ -16,6 +16,11 @@ const SECTIONS: { id: TabId; icon: string }[] = [
 ];
 const SETTINGS: { id: TabId; icon: string } = { id: 'settings', icon: 'gear' };
 
+/** Sections that show the centred bar instead of the corner pill. */
+export function usesBar(id: TabId): boolean {
+  return id !== 'search' && id !== 'settings';
+}
+
 /**
  * Section navigation in the manner of the tvOS sidebar. At rest it is a small
  * pill in the top corner naming the current section. Moving onto it (Up from
@@ -33,9 +38,9 @@ export function TabBar() {
   const topRoute = stacked ? stack.value[depth - 1].route.name : '';
   const playerOnTop = topRoute === 'player' || topRoute === 'trailer';
   const open = sidebarOpen.value && !stacked;
-  // Home wears the sections as a bar across the top centre; everywhere else they
-  // fold into the corner pill, which opens the sidebar.
-  const home = current === 'home' && !stacked && !open;
+  // Home, Movies, Series and Library wear the sections as a bar across the top
+  // centre; Search and Settings fold them into the corner pill and its sidebar.
+  const home = usesBar(current) && !stacked && !open;
   const hidden = playerOnTop || (!stacked && chromeHidden.value && !open);
   const barRef = useRef<HTMLDivElement>(null);
   const pillRef = useRef<HTMLDivElement | null>(null);
@@ -73,7 +78,7 @@ export function TabBar() {
       const target = e.target as HTMLElement;
       // On a section the edge opens the sidebar; deeper in, it lands on the Back pill.
       if (!stack.value.length && target.closest('.layer-root')) {
-        if (tab.value === 'home') focusEl(barRef.current?.querySelector<HTMLElement>('[data-tab="home"]'));
+        if (usesBar(tab.value)) focusEl(barRef.current?.querySelector<HTMLElement>(`[data-tab="${tab.value}"]`));
         else sidebarOpen.value = true;
       }
       else if (stack.value.length && target.closest('.layer-top') && !target.closest('.screen-player')) focusEl(pillRef.current);

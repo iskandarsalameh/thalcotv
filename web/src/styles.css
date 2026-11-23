@@ -2895,9 +2895,9 @@ img + .hero-title-backup {
   color: var(--text-3);
 }
 
-/* ---- Home's section bar -------------------------------------------------------
- * On Home the sections sit in one glass capsule at the top centre. On every
- * other section they fold into the corner pill.
+/* ---- section bar --------------------------------------------------------------
+ * On Home, Movies, Series and Library the sections sit in one glass capsule at
+ * the top centre. On Search and Settings they fold into the corner pill.
  */
 
 .topbar-wrap {
@@ -2932,14 +2932,14 @@ img + .hero-title-backup {
   border-radius: 2.3rem;
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 1rem;
   background: var(--glass-solid);
   box-shadow: var(--glass-edge), var(--glass-lift);
 }
 
 .top-item {
   height: 3.7rem;
-  padding: 0 1.7rem;
+  padding: 0 2rem;
   border-radius: 1.85rem;
   display: flex;
   align-items: center;
@@ -2968,7 +2968,7 @@ img + .hero-title-backup {
 .top-item:focus {
   background: var(--lit);
   color: #000;
-  transform: scale(1.06);
+  transform: scale(1.04);
   box-shadow: var(--lit-lift);
 }
 
