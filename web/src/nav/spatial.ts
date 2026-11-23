@@ -105,6 +105,8 @@ export function actionOf(e: KeyboardEvent): Action {
 
 function isVisible(el: HTMLElement): boolean {
   if (!el.isConnected) return false;
+  // Screens that are animating out, or sitting under the current one, are off limits.
+  if (el.closest('[data-inert]')) return false;
   // offsetParent is null for display:none subtrees (and for position:fixed, handled below).
   if (el.offsetParent === null && getComputedStyle(el).position !== 'fixed') return false;
   return true;
@@ -206,19 +208,20 @@ function findNext(from: HTMLElement, dir: Direction, scope: HTMLElement): HTMLEl
     let primary: number;
     switch (dir) {
       case 'right':
-        if (ccx <= cx + 1 || c.left < r.left + 1) continue;
+        // A candidate counts as "to the right" only if it starts beyond our centre.
+        if (ccx <= cx + 1 || c.left < cx - 1) continue;
         primary = Math.max(0, c.left - r.right);
         break;
       case 'left':
-        if (ccx >= cx - 1 || c.right > r.right - 1) continue;
+        if (ccx >= cx - 1 || c.right > cx + 1) continue;
         primary = Math.max(0, r.left - c.right);
         break;
       case 'down':
-        if (ccy <= cy + 1 || c.top < r.top + 1) continue;
+        if (ccy <= cy + 1 || c.top < cy - 1) continue;
         primary = Math.max(0, c.top - r.bottom);
         break;
       default:
-        if (ccy >= cy - 1 || c.bottom > r.bottom - 1) continue;
+        if (ccy >= cy - 1 || c.bottom > cy + 1) continue;
         primary = Math.max(0, r.top - c.bottom);
     }
 

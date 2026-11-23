@@ -53,6 +53,18 @@ dd {
   overflow: hidden;
 }
 
+/* Every screen is opaque so one can dissolve over another. */
+.layer {
+  background: #000;
+}
+
+/* Covered screens stay laid out but are not painted. Using visibility rather
+ * than display keeps their entrance animations from replaying on the way back. */
+.layer-hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .screen-center {
   display: flex;
   align-items: center;
@@ -152,6 +164,7 @@ dd {
 }
 
 .tabs {
+  position: relative;
   display: flex;
   gap: 0.25rem;
   padding: 0.5rem;
@@ -160,7 +173,29 @@ dd {
   box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.35);
 }
 
+/* The selection glides from tab to tab; it turns white while the bar has focus. */
+.tab-pill {
+  position: absolute;
+  top: 0.5rem;
+  left: 0;
+  height: 3.75rem;
+  border-radius: 2rem;
+  background: var(--fill-2);
+  transition:
+    transform 0.3s var(--ease),
+    width 0.3s var(--ease),
+    background-color 0.2s linear,
+    box-shadow 0.2s linear;
+  will-change: transform;
+}
+
+.tab-pill-focus {
+  background: #fff;
+  box-shadow: 0 0.8rem 1.8rem rgba(0, 0, 0, 0.45);
+}
+
 .tab {
+  position: relative;
   height: 3.75rem;
   padding: 0 1.8rem;
   border-radius: 2rem;
@@ -178,14 +213,10 @@ dd {
 
 .tab-on {
   color: #fff;
-  background: var(--fill-2);
 }
 
 .tab:focus {
-  background: #fff;
   color: #000;
-  transform: scale(1.08);
-  box-shadow: 0 0.8rem 1.8rem rgba(0, 0, 0, 0.45);
 }
 
 .tabbar-end {
@@ -1516,10 +1547,52 @@ img + .hero-title-backup {
   position: relative;
 }
 
+/* Letters / numbers switch, in the manner of a tvOS segmented control. */
+.kb-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.3rem;
+  padding: 0.3rem;
+  margin-bottom: 0.9rem;
+  border-radius: 0.95rem;
+  background: rgba(118, 118, 128, 0.24);
+}
+
+.kb-seg {
+  height: 3rem;
+  border-radius: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+.kb-seg-on {
+  background: var(--fill-2);
+  color: #fff;
+}
+
+.kb-seg:focus {
+  background: #fff;
+  color: #000;
+  box-shadow: 0 0.6rem 1.4rem rgba(0, 0, 0, 0.45);
+}
+
+/* Both pages occupy the same height so the action row never jumps. */
+.kb-page {
+  height: 24.5rem;
+}
+
+.kb-keys {
+  animation: fade-in 0.16s linear both;
+}
+
 .key-grid {
   display: grid;
-  gap: 0.55rem;
-  margin-bottom: 0.55rem;
+  gap: 0.4rem;
+  margin-bottom: 0.4rem;
 }
 
 .key-grid-10 {
@@ -1534,51 +1607,65 @@ img + .hero-title-backup {
   grid-template-columns: repeat(5, 1fr);
 }
 
-.key-grid-4 {
-  grid-template-columns: repeat(4, 1fr);
-}
-
-.key-grid-2 {
-  grid-template-columns: repeat(2, 1fr);
-}
-
-.keyboard-compact .key-grid-2 {
-  margin-top: 0.9rem;
-}
-
-.keyboard-wide .key-grid:last-of-type {
-  margin-top: 0.9rem;
-}
-
+/* Keys are bare glyphs; only the focused key gets a surface. */
 .key {
-  height: 4.2rem;
-  border-radius: 0.85rem;
-  background: var(--fill);
+  height: 4.5rem;
+  border-radius: 0.95rem;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.92);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  font-size: 1.9rem;
-  font-weight: 600;
+  font-size: 2.2rem;
+  font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
 }
 
+.keyboard-wide .key {
+  height: 4.2rem;
+  font-size: 2rem;
+}
+
 .key-snippet {
-  font-size: 1.45rem;
+  font-size: 1.45rem !important;
+  color: var(--text-2);
+}
+
+.kb-actions {
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr 1fr;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+
+.kb-actions-4 {
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 1rem;
+}
+
+.kb-actions-5 {
+  grid-template-columns: repeat(5, 1fr);
+  margin-top: 1rem;
 }
 
 .key-action {
-  font-size: 1.45rem;
-  background: var(--fill-2);
+  height: 3.9rem !important;
+  font-size: 1.25rem !important;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-2);
 }
 
 .key-action .icon {
-  font-size: 1.7rem;
+  font-size: 2rem;
 }
 
 .key-submit {
-  background: var(--fill-3);
+  background: var(--fill-2);
+  color: #fff;
 }
 
 .key-live {
@@ -1595,7 +1682,7 @@ img + .hero-title-backup {
 }
 
 .key-action:focus {
-  transform: scale(1.05);
+  transform: scale(1.04);
 }
 
 .key-hint {
@@ -1604,6 +1691,11 @@ img + .hero-title-backup {
   line-height: 1.4;
   color: var(--text-2);
   text-align: center;
+}
+
+[lang='ar'] .key-action {
+  letter-spacing: 0;
+  font-size: 1.4rem !important;
 }
 
 /* Real text field used only to summon the system keyboard for voice input. */
@@ -2064,4 +2156,143 @@ img + .hero-title-backup {
 
 .chip-accent {
   background: var(--fill-3);
+}
+
+/* ---- motion between screens -------------------------------------------------
+ * Principles: animate only transform and opacity (GPU compositing, no layout),
+ * keep it short (under a third of a second), ease out so movement settles
+ * rather than stops, and never make input wait: the destination screen is
+ * live from the first frame and a new navigation simply replaces the old one.
+ * Going deeper brings the new screen forward over the old one; going back
+ * sends the current screen away and lets the previous one settle into place.
+ */
+
+.layer-in-forward {
+  z-index: 2;
+  animation: layer-in-forward 0.3s var(--ease) both;
+  will-change: transform, opacity;
+}
+
+.layer-out-forward {
+  animation: layer-fade-out 0.2s linear both;
+}
+
+.layer-in-back {
+  animation: layer-in-back 0.32s var(--ease) both;
+  will-change: transform;
+}
+
+.layer-out-back {
+  z-index: 2;
+  pointer-events: none;
+  animation: layer-out-back 0.2s cubic-bezier(0.4, 0, 1, 1) both;
+  will-change: transform, opacity;
+}
+
+@keyframes layer-in-forward {
+  from {
+    opacity: 0;
+    transform: scale(0.965);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes layer-in-back {
+  from {
+    transform: scale(1.025);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes layer-out-back {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.965);
+  }
+}
+
+@keyframes layer-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+/* Switching tabs: the new section rises a little as it fades in. */
+.layer-root > .screen {
+  animation: tab-in 0.26s var(--ease) both;
+}
+
+@keyframes tab-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.9rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Content that arrives after its screen (rows, walls of posters) fades in. */
+.shelf,
+.grid,
+.streams-list .stream {
+  animation: fade-in 0.28s linear both;
+}
+
+/* A title page assembles from the top down, a few frames apart. */
+.details-top > * {
+  animation: settle-in 0.36s var(--ease) both;
+}
+
+.details-top > :nth-child(2) {
+  animation-delay: 0.03s;
+}
+
+.details-top > :nth-child(3) {
+  animation-delay: 0.06s;
+}
+
+.details-top > :nth-child(4) {
+  animation-delay: 0.09s;
+}
+
+.details-top > :nth-child(n + 5) {
+  animation-delay: 0.12s;
+}
+
+@keyframes settle-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 1rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.01s !important;
+  }
+}
+
+/* The title placeholder only shows if artwork has not arrived after a moment,
+ * so text never ghosts through a poster that is still fading in. */
+.card-fallback {
+  animation: fade-in 0.3s linear 1.2s both;
 }

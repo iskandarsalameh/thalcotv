@@ -37,9 +37,15 @@ Only changes under `vega/` (the shell itself) need a new `.vpkg`.
   link on the page that opens, confirm on the TV. Add-ons that need setting up
   send the phone to their setup page first. The link is encrypted on the phone
   and decrypted on the TV, so the relay in between never sees it.
-- **Keyboard with Dictate.** A tidy grid for the remote, plus a Dictate key
-  that hands over to voice input (the system keyboard listens while the
-  remote's microphone button is held).
+- **Keyboard with Dictate.** Letters and numbers on separate pages, bare keys
+  that only light up under focus, plus a Dictate key that hands over to voice
+  input (the system keyboard listens while the remote's microphone button is
+  held).
+- **Motion.** Screens dissolve forward and settle back, the tab selection
+  glides, content fades in as it arrives. Everything animates on the GPU
+  (transform and opacity only), lasts under a third of a second, and never
+  blocks input: the next screen is live from its first frame. Reduce Motion in
+  Settings turns it off.
 - **Smart source selection.** Streams from all add-ons are ranked for this
   device (formats it decodes natively first, then quality, your audio language,
   file size, the release used for the previous episode). Play starts the best

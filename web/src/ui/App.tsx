@@ -62,6 +62,26 @@ function StackScreen({ entry, active }: { entry: StackEntry; active: boolean }) 
 
 const IDLE_BEFORE_UPDATE_MS = 90 * 1000;
 
+/**
+ * A screen change in flight. The new screen is mounted and takes input at
+ * once; the animation is decoration layered on top, never a wait.
+ */
+interface Transition {
+  id: number;
+  /** forward = going deeper (push/replace), back = returning (pop). */
+  kind: 'forward' | 'back';
+  /** Layer that animates in. */
+  enter: number | 'root';
+  /** Layer kept visible underneath while the new one fades in over it. */
+  under: number | 'root' | null;
+  /** Screen that has left the stack but is still fading out. */
+  leaving: StackEntry | null;
+}
+
+/** Longest animation plus a frame of slack; after this the extra layers are dropped. */
+const TRANSITION_MS = 340;
+let transitionSeq = 0;
+
 export function App() {
   const [boot, setBoot] = useState<'loading' | 'ready' | 'offline'>('loading');
   const layers = stack.value;
@@ -69,6 +89,46 @@ export function App() {
   const currentTab = tab.value;
   const rootLayer = useRef<HTMLDivElement>(null);
   const lastInput = useRef(Date.now());
+
+  // Work out, during render, what kind of screen change just happened, so the
+  // very first frame already carries the right animation classes.
+  const prevStack = useRef<StackEntry[]>(layers);
+  const transition = useRef<Transition | null>(null);
+  const [, rerender] = useState(0);
+  if (prevStack.current !== layers) {
+    const old = prevStack.current;
+    prevStack.current = layers;
+    const oldTop = old.length ? old[old.length - 1] : null;
+    const newTop = layers.length ? layers[layers.length - 1] : null;
+    if ((oldTop?.key ?? 'root') !== (newTop?.key ?? 'root')) {
+      if (settings.value.reduceMotion) {
+        transition.current = null;
+      } else if (newTop && !old.some((e) => e.key === newTop.key)) {
+        const oldGone = !!oldTop && !layers.some((e) => e.key === oldTop.key);
+        transition.current = {
+          id: ++transitionSeq,
+          kind: 'forward',
+          enter: newTop.key,
+          under: oldGone ? null : oldTop ? oldTop.key : 'root',
+          leaving: oldGone ? oldTop : null,
+        };
+      } else {
+        transition.current = { id: ++transitionSeq, kind: 'back', enter: newTop ? newTop.key : 'root', under: null, leaving: oldTop };
+      }
+    }
+  }
+  const tr = transition.current;
+  useEffect(() => {
+    if (!tr) return;
+    const id = tr.id;
+    const timer = setTimeout(() => {
+      if (transition.current?.id === id) {
+        transition.current = null;
+        rerender((n) => n + 1);
+      }
+    }, TRANSITION_MS);
+    return () => clearTimeout(timer);
+  }, [tr?.id]);
 
   const start = () => {
     setBoot('loading');
@@ -79,11 +139,10 @@ export function App() {
   // Restore focus whenever the visible screen changes.
   useEffect(() => {
     chromeHidden.value = false;
-    const all = document.querySelectorAll<HTMLElement>('.layer');
-    const topLayer = all[all.length - 1];
+    const topLayer = document.querySelector<HTMLElement>('.layer-top');
     if (!topLayer) return;
     const f = getFocused();
-    if (f && (topLayer.contains(f) || f.closest('#tabbar'))) return;
+    if (f && !f.closest('[data-inert]') && (topLayer.contains(f) || f.closest('#tabbar'))) return;
     const screen = topLayer.querySelector('.screen');
     if (!focusFirst(screen ?? topLayer) && layers.length === 0) focusFirst(document.getElementById('tabbar'));
   }, [tick, boot]);
@@ -161,9 +220,17 @@ export function App() {
   }, [boot]);
 
   const rootActive = layers.length === 0;
+  const top = layers.length ? layers[layers.length - 1] : null;
+  const entering = (key: number | 'root') => (tr && tr.enter === key ? (tr.kind === 'forward' ? ' layer-in-forward' : ' layer-in-back') : '');
+  // The screen that just left stays in the list (same key, same instance) until its exit animation ends.
+  const rendered = tr?.leaving && !layers.some((e) => e.key === tr.leaving!.key) ? layers.concat(tr.leaving) : layers;
   return (
     <div class={'app' + (settings.value.reduceMotion ? ' reduce-motion' : '')}>
-      <div class="layer" ref={rootLayer} style={{ display: rootActive ? undefined : 'none' }}>
+      <div
+        class={'layer layer-root' + (rootActive ? ' layer-top' : '') + entering('root') + (rootActive || tr?.under === 'root' ? '' : ' layer-hidden')}
+        ref={rootLayer}
+        data-inert={rootActive ? undefined : ''}
+      >
         {boot === 'ready' ? (
           <TabRoot key={currentTab} active={rootActive} />
         ) : boot === 'loading' ? (
@@ -185,11 +252,21 @@ export function App() {
           </div>
         )}
       </div>
-      {layers.map((entry, i) => (
-        <div class="layer layer-stack" key={entry.key} style={{ display: i === layers.length - 1 ? undefined : 'none' }}>
-          <StackScreen entry={entry} active={i === layers.length - 1} />
-        </div>
-      ))}
+      {rendered.map((entry) => {
+        const isTop = entry === top;
+        const isLeaving = !!tr && tr.leaving === entry && !isTop;
+        const visible = isTop || isLeaving || tr?.under === entry.key;
+        const motion = isLeaving ? (tr!.kind === 'back' ? ' layer-out-back' : ' layer-out-forward') : entering(entry.key);
+        return (
+          <div
+            class={'layer layer-stack' + (isTop ? ' layer-top' : '') + motion + (visible ? '' : ' layer-hidden')}
+            key={entry.key}
+            data-inert={isTop ? undefined : ''}
+          >
+            <StackScreen entry={entry} active={isTop} />
+          </div>
+        );
+      })}
       {boot === 'ready' && <TabBar />}
       <Overlays />
     </div>

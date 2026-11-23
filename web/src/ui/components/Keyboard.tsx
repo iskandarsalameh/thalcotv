@@ -4,8 +4,9 @@ import { Icon } from './Icon';
 import { locale, t } from '../../core/i18n';
 import { addKeyHandler, focusEl } from '../../nav/spatial';
 
-/** Search: a 6 x 6 block, letters then digits, so every row is full. */
-const GRID = 'abcdefghijklmnopqrstuvwxyz1234567890'.split('');
+/** Search: letters and numbers live on separate pages, six keys to a row. */
+const LETTERS = 'abcdefghijklmnopqrstuvwxyz'.split('');
+const NUMBERS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', "'", '&', '.', ':', '!', '?', ','];
 /** Dialogs: a familiar QWERTY block, ten keys to a row. */
 const QWERTY = ['1234567890', 'qwertyuiop', 'asdfghjkl-', 'zxcvbnm./:'].map((r) => r.split(''));
 const URL_SYMBOLS = ['_', '?', '=', '&', '%', '@', '~', '+', '#', ','];
@@ -45,6 +46,7 @@ function speechRecognition(): (new () => SpeechRecognitionLike) | null {
  */
 export function Keyboard({ value, onChange, layout = 'text', compact, onSubmit, submitLabel }: Props) {
   const [mode, setMode] = useState<'idle' | 'listening' | 'system'>('idle');
+  const [page, setPage] = useState<'abc' | '123'>('abc');
   const inputRef = useRef<HTMLInputElement>(null);
   const micRef = useRef<HTMLDivElement | null>(null);
   const latest = useRef({ value, onChange });
@@ -144,10 +146,11 @@ export function Keyboard({ value, onChange, layout = 'text', compact, onSubmit, 
     </Focusable>
   );
 
+  // The action row is plain text until focused, like the keys themselves.
   const micKey = (
     <Focusable class={'key key-action' + (mode !== 'idle' ? ' key-live' : '')} onSelect={dictate} label={t('kb.dictate')} elRef={(el) => (micRef.current = el)}>
       <Icon name="mic" />
-      <span>{mode === 'listening' ? t('kb.listening') : t('kb.dictate')}</span>
+      {!compact && <span>{mode === 'listening' ? t('kb.listening') : t('kb.dictate')}</span>}
     </Focusable>
   );
   const spaceKey = (
@@ -158,7 +161,6 @@ export function Keyboard({ value, onChange, layout = 'text', compact, onSubmit, 
   const deleteKey = (
     <Focusable class="key key-action" onSelect={backspace} onLongPress={() => latest.current.onChange('')} label={t('kb.delete')}>
       <Icon name="backspace" />
-      <span>{t('kb.delete')}</span>
     </Focusable>
   );
   const clearKey = (
@@ -171,12 +173,24 @@ export function Keyboard({ value, onChange, layout = 'text', compact, onSubmit, 
     <div class={'keyboard' + (compact ? ' keyboard-compact' : ' keyboard-wide')} data-focus-group="" dir="ltr">
       {compact ? (
         <>
-          <div class="key-grid key-grid-6">{GRID.map((k) => key(k))}</div>
-          <div class="key-grid key-grid-2">
-            {micKey}
+          <div class="kb-switch">
+            <Focusable class={'kb-seg' + (page === 'abc' ? ' kb-seg-on' : '')} onFocus={() => setPage('abc')} onSelect={() => setPage('abc')} label="abc">
+              abc
+            </Focusable>
+            <Focusable class={'kb-seg' + (page === '123' ? ' kb-seg-on' : '')} onFocus={() => setPage('123')} onSelect={() => setPage('123')} label="123">
+              123
+            </Focusable>
+          </div>
+          <div class="kb-page">
+            <div class="key-grid key-grid-6 kb-keys" key={page}>
+              {(page === 'abc' ? LETTERS : NUMBERS).map((k) => key(k))}
+            </div>
+          </div>
+          <div class="kb-actions">
             {spaceKey}
             {deleteKey}
             {clearKey}
+            {micKey}
           </div>
         </>
       ) : (
@@ -188,7 +202,7 @@ export function Keyboard({ value, onChange, layout = 'text', compact, onSubmit, 
             </div>
           ))}
           {layout === 'url' && <div class="key-grid key-grid-10">{URL_SYMBOLS.map((k) => key(k))}</div>}
-          <div class={'key-grid ' + (onSubmit ? 'key-grid-5' : 'key-grid-4')}>
+          <div class={'kb-actions ' + (onSubmit ? 'kb-actions-5' : 'kb-actions-4')}>
             {micKey}
             {spaceKey}
             {deleteKey}
